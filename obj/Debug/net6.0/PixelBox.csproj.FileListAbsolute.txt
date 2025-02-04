@@ -1,0 +1,12 @@
+D:\dev\Visual studio\Projects\PixelBox\bin\Debug\net6.0\PixelBox.deps.json
+D:\dev\Visual studio\Projects\PixelBox\bin\Debug\net6.0\PixelBox.dll
+D:\dev\Visual studio\Projects\PixelBox\bin\Debug\net6.0\PixelBox.pdb
+D:\dev\Visual studio\Projects\PixelBox\obj\Debug\net6.0\PixelBox.csproj.AssemblyReference.cache
+D:\dev\Visual studio\Projects\PixelBox\obj\Debug\net6.0\PixelBox.GeneratedMSBuildEditorConfig.editorconfig
+D:\dev\Visual studio\Projects\PixelBox\obj\Debug\net6.0\PixelBox.AssemblyInfoInputs.cache
+D:\dev\Visual studio\Projects\PixelBox\obj\Debug\net6.0\PixelBox.AssemblyInfo.cs
+D:\dev\Visual studio\Projects\PixelBox\obj\Debug\net6.0\PixelBox.csproj.CoreCompileInputs.cache
+D:\dev\Visual studio\Projects\PixelBox\obj\Debug\net6.0\PixelBox.dll
+D:\dev\Visual studio\Projects\PixelBox\obj\Debug\net6.0\refint\PixelBox.dll
+D:\dev\Visual studio\Projects\PixelBox\obj\Debug\net6.0\PixelBox.pdb
+D:\dev\Visual studio\Projects\PixelBox\obj\Debug\net6.0\ref\PixelBox.dll

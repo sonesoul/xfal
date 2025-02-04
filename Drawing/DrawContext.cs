@@ -1,0 +1,155 @@
+﻿using Microsoft.Xna.Framework.Graphics;
+using System;
+using System.Collections.Generic;
+
+namespace PixelBox.Drawing
+{
+    public class DrawContext
+    {
+        public SpriteBatch SpriteBatch { get; }
+        public Texture2D PixelTexture { get; }
+
+        public DrawContext(RenderSource source)
+        {
+            SpriteBatch = source.SpriteBatch;
+            PixelTexture = source.Pixel;
+        }
+
+        public void String(string str, SpriteFont font, Vector2 position, Vector2 scale, Vector2 origin, int colorIndex, float rotation = 0)
+        {
+            SpriteEffects spriteEffects = SpriteEffects.None;
+
+            if (scale.X < 0)
+            {
+                spriteEffects &= SpriteEffects.FlipHorizontally;
+                scale.X = -scale.X;
+            }
+
+            if (scale.Y < 0)
+            {
+                spriteEffects &= SpriteEffects.FlipVertically;
+                scale.Y = -scale.Y;
+            }
+
+            SpriteBatch.DrawString(font, str, position, Palette.GetColor(colorIndex), rotation, origin, scale, spriteEffects, 0);
+        }
+        public void String(string str, SpriteFont font, Vector2 position, Vector2 scale, int colorIndex)
+        {
+            String(
+                str,
+                font,
+                position,
+                scale,
+                font.MeasureString(str) / 2,
+                colorIndex);
+        }
+        public void String(string str, SpriteFont font, in DrawOptions options)
+        {
+            String(
+                str,
+                font,
+                options.position,
+                options.origin,
+                options.scale,
+                options.colorIndex,
+                options.rotationDeg.Deg2Rad());
+        }
+
+        public void Texture(Texture2D texture, in DrawOptions options)
+        {
+            SpriteEffects spriteEffects = SpriteEffects.None;
+            Vector2 scale = options.scale;
+
+            if (scale.X < 0)
+            {
+                spriteEffects &= SpriteEffects.FlipHorizontally;
+                scale.X = -scale.X;
+            }
+
+            if (scale.Y < 0)
+            {
+                spriteEffects &= SpriteEffects.FlipVertically;
+                scale.Y = -scale.Y;
+            }
+
+            SpriteBatch.Draw(
+                texture,
+                options.position,
+                null,
+                Palette.GetColor(options.colorIndex),
+                options.rotationDeg.Deg2Rad(),
+                options.origin,
+                scale,
+                spriteEffects,
+                0);
+        }
+
+        public void HollowRect(Rectangle rect, int colorIndex, int boundThickness = 1)
+        {
+            rect.Size = (rect.Size.ToVector2().Both() + 1).ToPoint();
+            Rectangle[] rects = new Rectangle[4];
+
+            rects[0] = new(rect.Left, rect.Top, rect.Width, boundThickness);
+            rects[1] = new(rect.Left, rect.Top, boundThickness, rect.Height);
+
+            rects[2] = new(rect.Right - boundThickness, rect.Top, boundThickness, rect.Height);
+            rects[3] = new(rect.Left, rect.Bottom - boundThickness, rect.Width, boundThickness);
+
+            foreach (var item in rects)
+            {
+                SpriteBatch.Draw(PixelTexture, item, Palette.GetColor(colorIndex));
+            }
+        }
+        public void Rectangle(Rectangle rect, int colorIndex)
+        {
+            rect.Size = (rect.Size.ToVector2().Both() + 1).ToPoint();
+            SpriteBatch.Draw(PixelTexture, rect, Palette.GetColor(colorIndex));
+        }
+
+        public void HollowPoly(List<Vector2> vertices, int colorIndex, int boundThickness)
+        {
+            for (int i = 0; i < vertices.Count; i++)
+            {
+                var current = vertices[i];
+                var next = vertices[(i + 1) % vertices.Count];
+
+                Line(current, next, colorIndex, boundThickness);
+            }
+        }
+        public void Line(Vector2 start, Vector2 end, int colorIndex, float thickness = 1f)
+        {
+            Vector2 edge = end - start;
+            float angle = MathF.Atan2(edge.Y, edge.X);
+            float length = edge.Length();
+            
+            SpriteBatch.Draw(
+                PixelTexture, 
+                start, 
+                null, 
+                Palette.GetColor(colorIndex), 
+                angle, 
+                Vector2.Zero, 
+                new Vector2(length, thickness), 
+                SpriteEffects.None, 
+                0);
+        }
+        public void Pixel(Vector2 position, int colorIndex)
+        {
+            SpriteBatch.Draw(PixelTexture, position, Palette.GetColor(colorIndex));
+        }
+    }
+    public struct DrawOptions
+    {
+        public Vector2 position = Vector2.Zero;
+        public Vector2 origin = Vector2.Zero;
+        public Vector2 scale = Vector2.One;
+
+        public int colorIndex = Palette.White;
+        public float rotationDeg = 0;
+
+        public DrawOptions()
+        {
+
+        }
+    }
+}
