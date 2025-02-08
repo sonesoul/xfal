@@ -163,7 +163,7 @@ namespace PixelBox.InputHandling
         {
             AxisCulture.Deconstruct(out var up, out var down, out var left, out var right);
 
-            _axis.X = (IsKeyDown(left) ? 1 : 0) - (IsKeyDown(right) ? 1 : 0);
+            _axis.X = (IsKeyDown(right) ? 1 : 0) - (IsKeyDown(left) ? 1 : 0);
             _axis.Y = (IsKeyDown(up) ? 1 : 0) - (IsKeyDown(down) ? 1 : 0);
         }
     }
