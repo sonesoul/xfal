@@ -55,12 +55,10 @@ namespace PixelBox.Extensions
 
         public static float Dot(this Vector2 a, Vector2 b) => Vector2.Dot(a, b);
         public static float Cross(this Vector2 a, Vector2 b) => a.X * b.Y - a.Y * b.X;
-        public static Vector2 RotateAround(this Vector2 v, Vector2 origin, float rotationDeg)
+        public static Vector2 RotateAround(this Vector2 v, Vector2 origin, float rotationRad)
         {
-            rotationDeg = rotationDeg.Deg2Rad();
-
-            float cos = (float)Math.Cos(rotationDeg);
-            float sin = (float)Math.Sin(rotationDeg);
+            float cos = (float)Math.Cos(rotationRad);
+            float sin = (float)Math.Sin(rotationRad);
 
             Vector2 translatedPoint = v - origin;
 

@@ -1,6 +1,9 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
+using nkast.Aether.Physics2D.Collision.Shapes;
+using nkast.Aether.Physics2D.Dynamics;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace PixelBox.Drawing
 {
@@ -106,7 +109,7 @@ namespace PixelBox.Drawing
             SpriteBatch.Draw(PixelTexture, rect, Palette.GetColor(colorIndex));
         }
 
-        public void HollowPoly(List<Vector2> vertices, int colorIndex, int boundThickness)
+        public void HollowPoly(List<Vector2> vertices, int colorIndex, float boundThickness)
         {
             for (int i = 0; i < vertices.Count; i++)
             {
@@ -136,6 +139,18 @@ namespace PixelBox.Drawing
         public void Pixel(Vector2 position, int colorIndex)
         {
             SpriteBatch.Draw(PixelTexture, position, Palette.GetColor(colorIndex));
+        }
+
+        public void HollowPoly(Body body, PolygonShape shape, int colorIndex, float boundThickness)
+        {
+            List<Vector2> vertices = new(shape.Vertices.Count);
+
+            foreach (var vertex in shape.Vertices) 
+            {
+                vertices.Add(vertex.RotateAround(Vector2.Zero, body.Rotation) + body.Position);
+            }
+       
+            HollowPoly(vertices, colorIndex, boundThickness);
         }
     }
     public struct DrawOptions
