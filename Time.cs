@@ -4,7 +4,7 @@
     {
         public static float Delta { get; private set; }
         public static float RealDelta { get; private set; }
-        public static float FixedDelta { get; set; } = 1.0f / 120;
+        public static float FixedDelta { get; set; } = 1.0f / 60;
 
         public static GameTime GameTime { get; private set; }
 
