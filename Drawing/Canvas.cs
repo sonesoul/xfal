@@ -20,6 +20,7 @@ namespace PixelBox.Drawing
         public RectangleF Bounds { get => _bounds; set => SetBounds(value); }
         public RenderSource Source { get => _source; set => SetSource(value); }
         public Vector2 Size { get => Bounds.Size; set => SetSize(value); } 
+        public Vector2 Center => Bounds.Center;
         public ref Vector2 Location => ref _bounds.Location;
 
         public event Action Began, Ended;
