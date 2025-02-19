@@ -93,12 +93,12 @@ namespace PixelBox
         }
         public void StartNew(IEnumerator iterator)
         {
-            Stop();
+            Break();
             SetIterator(iterator);
             Start();
         }
 
-        public void Stop()
+        public void Break()
         {
             if (!IsRunning)
                 return;
@@ -108,13 +108,20 @@ namespace PixelBox
         }
         public void Complete()
         {
-            Stop();
+            Break();
             Completed?.Invoke(this);
         }
 
         private void SetIterator(IEnumerator iterator)
         {
             Iterator = iterator ?? throw new ArgumentNullException(nameof(iterator));
+        }
+
+        public static StepTask Run(IEnumerator iterator) => new(iterator, true);
+        public static void Run(IEnumerator iterator, ref StepTask stepTask)
+        {
+            stepTask?.Break();
+            stepTask = Run(iterator);
         }
     }
 }
