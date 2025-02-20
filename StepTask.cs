@@ -68,39 +68,26 @@ namespace PixelBox
 
         public static YieldInstruction Yields { get; } = new();
 
-        public event Action<StepTask> Completed;
-
         public IEnumerator Iterator { get; private set; }
         public bool IsRunning { get; private set; }
 
-        public StepTask(IEnumerator iterator, bool start = true)
-        {
-            SetIterator(iterator);
+        public event Action<StepTask> Completed;
 
-            if (start)
-            {
-                Start();
-            }
-        }
+        public StepTask() => Iterator = null;
+        public StepTask(IEnumerator iterator) => Begin(iterator);
 
-        public void Start()
+        public void Begin(IEnumerator iterator)
         {
-            if (IsRunning)
-                return;
+            Break();
+
+            Iterator = iterator ?? throw new ArgumentNullException(nameof(iterator), "Iterator can't be null.");
 
             Manager.Register(this);
             IsRunning = true;
         }
-        public void StartNew(IEnumerator iterator)
-        {
-            Break();
-            SetIterator(iterator);
-            Start();
-        }
-
         public void Break()
         {
-            if (!IsRunning)
+            if (!IsRunning || Iterator == null)
                 return;
             
             Manager.Unregister(this);
@@ -112,16 +99,16 @@ namespace PixelBox
             Completed?.Invoke(this);
         }
 
-        private void SetIterator(IEnumerator iterator)
+        public static StepTask Run(IEnumerator iterator, Action completeCallback = null)
         {
-            Iterator = iterator ?? throw new ArgumentNullException(nameof(iterator));
-        }
+            StepTask task = new(iterator);
 
-        public static StepTask Run(IEnumerator iterator) => new(iterator, true);
-        public static void Run(IEnumerator iterator, ref StepTask stepTask)
-        {
-            stepTask?.Break();
-            stepTask = Run(iterator);
+            if (completeCallback != null)
+            {
+                task.Completed += t => completeCallback();
+            }
+
+            return task;
         }
     }
 }
