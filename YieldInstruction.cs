@@ -38,6 +38,23 @@ namespace PixelBox
             Frame.Draw -= TriggerExit;
         }
 
+        public IEnumerator WaitForSeconds(float time)
+        {
+            while (time > 0)
+            {
+                time -= Time.Delta;
+                yield return null;
+            }
+        }
+        public IEnumerator WaitForRealSeconds(float time)
+        {
+            while (time > 0)
+            {
+                time -= Time.RealDelta;
+                yield return null;
+            }
+        }
+
         public IEnumerator Interpolate(Func<float, float> action)
         {
             float elapsed = 0;
