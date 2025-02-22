@@ -71,10 +71,16 @@ namespace PixelBox
         public IEnumerator Iterator { get; private set; }
         public bool IsRunning { get; private set; }
 
-        public event Action<StepTask> Completed;
+        public event Action Completed;
 
-        public StepTask() => Iterator = null;
-        public StepTask(IEnumerator iterator) => Begin(iterator);
+        public StepTask()
+        {
+            Iterator = null;
+        }
+        public StepTask(IEnumerator iterator)
+        {
+            Begin(iterator);
+        }
 
         public void Begin(IEnumerator iterator)
         {
@@ -96,7 +102,7 @@ namespace PixelBox
         public void Complete()
         {
             Break();
-            Completed?.Invoke(this);
+            Completed?.Invoke();
         }
 
         public static StepTask Run(IEnumerator iterator, Action completeCallback = null)
@@ -105,7 +111,7 @@ namespace PixelBox
 
             if (completeCallback != null)
             {
-                task.Completed += t => completeCallback();
+                task.Completed += completeCallback;
             }
 
             return task;
