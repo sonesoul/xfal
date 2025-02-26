@@ -31,7 +31,7 @@ namespace PixelBox.Drawing
 
         protected Vector2 _position = Vector2.Zero;
         protected RenderOptions _options = new();
-        protected int _backgroundColor = Palette.Black;
+        protected int _backgroundColor = Palette.TrueBlack;
 
         public Canvas(RenderSource source, Vector2 size)
         {

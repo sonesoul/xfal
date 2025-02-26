@@ -159,7 +159,7 @@ namespace PixelBox.Drawing
         public Vector2 origin = Vector2.Zero;
         public Vector2 scale = Vector2.One;
 
-        public int colorIndex = Palette.White;
+        public int colorIndex = Palette.SoftWhite;
         public float rotationDeg = 0;
 
         public DrawOptions()

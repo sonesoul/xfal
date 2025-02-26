@@ -7,7 +7,7 @@ namespace PixelBox.Drawing
 {
     public class Drawer<T> where T : IRenderer
     {
-        public int BackgroundColor { get; set; } = Palette.Black;
+        public int BackgroundColor { get; set; } = Palette.TrueBlack;
         
         public RenderSource Source => Canvas.Source;
         public RenderOptions Options { get; set; } = new();
