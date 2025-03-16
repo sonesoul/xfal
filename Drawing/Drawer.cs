@@ -7,7 +7,7 @@ namespace PixelBox.Drawing
 {
     public class Drawer<T> where T : IRenderer
     {
-        public int BackgroundColor { get; set; } = Palette.TrueBlack;
+        public Color BackgroundColor { get; set; } = Color.Black;
         
         public RenderSource Source => Canvas.Source;
         public RenderOptions Options { get; set; } = new();
@@ -104,7 +104,7 @@ namespace PixelBox.Drawing
         }
         public void Clear()
         {
-            Graphics.Clear(Palette.GetColor(BackgroundColor));
+            Graphics.Clear(BackgroundColor);
             Cleared?.Invoke();
         }
 

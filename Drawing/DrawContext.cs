@@ -18,7 +18,7 @@ namespace PixelBox.Drawing
             PixelTexture = source.Pixel;
         }
 
-        public void String(string str, SpriteFont font, Vector2 position, Vector2 scale, Vector2 origin, int colorIndex, float rotation = 0)
+        public void String(string str, SpriteFont font, Vector2 position, Vector2 scale, Vector2 origin, Color color, float rotation = 0)
         {
             SpriteEffects spriteEffects = SpriteEffects.None;
 
@@ -34,9 +34,9 @@ namespace PixelBox.Drawing
                 scale.Y = -scale.Y;
             }
 
-            SpriteBatch.DrawString(font, str, position, Palette.GetColor(colorIndex), rotation, origin, scale, spriteEffects, 0);
+            SpriteBatch.DrawString(font, str, position, color, rotation, origin, scale, spriteEffects, 0);
         }
-        public void String(string str, SpriteFont font, Vector2 position, Vector2 scale, int colorIndex)
+        public void String(string str, SpriteFont font, Vector2 position, Vector2 scale, Color color)
         {
             String(
                 str,
@@ -44,7 +44,7 @@ namespace PixelBox.Drawing
                 position,
                 scale,
                 font.MeasureString(str) / 2,
-                colorIndex);
+                color);
         }
         public void String(string str, SpriteFont font, in DrawOptions options)
         {
@@ -54,7 +54,7 @@ namespace PixelBox.Drawing
                 options.position,
                 options.origin,
                 options.scale,
-                options.colorIndex,
+                options.color,
                 options.rotationDeg.Deg2Rad());
         }
 
@@ -79,7 +79,7 @@ namespace PixelBox.Drawing
                 texture,
                 options.position,
                 null,
-                Palette.GetColor(options.colorIndex),
+                options.color,
                 options.rotationDeg.Deg2Rad(),
                 options.origin,
                 scale,
@@ -87,7 +87,7 @@ namespace PixelBox.Drawing
                 0);
         }
 
-        public void HollowRect(Rectangle rect, int colorIndex, int boundThickness = 1)
+        public void HollowRect(Rectangle rect, Color color, int boundThickness = 1)
         {
             rect.Size = (rect.Size.ToVector2().Both() + 1).ToPoint();
             Rectangle[] rects = new Rectangle[4];
@@ -100,26 +100,26 @@ namespace PixelBox.Drawing
 
             foreach (var item in rects)
             {
-                SpriteBatch.Draw(PixelTexture, item, Palette.GetColor(colorIndex));
+                SpriteBatch.Draw(PixelTexture, item, color);
             }
         }
-        public void Rectangle(Rectangle rect, int colorIndex)
+        public void Rectangle(Rectangle rect, Color color)
         {
             rect.Size = (rect.Size.ToVector2().Both() + 1).ToPoint();
-            SpriteBatch.Draw(PixelTexture, rect, Palette.GetColor(colorIndex));
+            SpriteBatch.Draw(PixelTexture, rect, color);
         }
 
-        public void HollowPoly(List<Vector2> vertices, int colorIndex, float boundThickness)
+        public void HollowPoly(List<Vector2> vertices, Color color, float boundThickness)
         {
             for (int i = 0; i < vertices.Count; i++)
             {
                 var current = vertices[i];
                 var next = vertices[(i + 1) % vertices.Count];
 
-                Line(current, next, colorIndex, boundThickness);
+                Line(current, next, color, boundThickness);
             }
         }
-        public void Line(Vector2 start, Vector2 end, int colorIndex, float thickness = 1f)
+        public void Line(Vector2 start, Vector2 end, Color color, float thickness = 1f)
         {
             Vector2 edge = end - start;
             float angle = MathF.Atan2(edge.Y, edge.X);
@@ -129,19 +129,19 @@ namespace PixelBox.Drawing
                 PixelTexture, 
                 start, 
                 null, 
-                Palette.GetColor(colorIndex), 
+                color, 
                 angle, 
                 Vector2.Zero, 
                 new Vector2(length, thickness), 
                 SpriteEffects.None, 
                 0);
         }
-        public void Pixel(Vector2 position, int colorIndex)
+        public void Pixel(Vector2 position, Color color)
         {
-            SpriteBatch.Draw(PixelTexture, position, Palette.GetColor(colorIndex));
+            SpriteBatch.Draw(PixelTexture, position, color);
         }
 
-        public void HollowPoly(Body body, PolygonShape shape, int colorIndex, float boundThickness)
+        public void HollowPoly(Body body, PolygonShape shape, Color color, float boundThickness)
         {
             List<Vector2> vertices = new(shape.Vertices.Count);
 
@@ -150,7 +150,7 @@ namespace PixelBox.Drawing
                 vertices.Add(vertex.RotateAround(Vector2.Zero, body.Rotation) + body.Position);
             }
        
-            HollowPoly(vertices, colorIndex, boundThickness);
+            HollowPoly(vertices, color, boundThickness);
         }
     }
     public struct DrawOptions
@@ -159,7 +159,7 @@ namespace PixelBox.Drawing
         public Vector2 origin = Vector2.Zero;
         public Vector2 scale = Vector2.One;
 
-        public int colorIndex = Palette.SoftWhite;
+        public Color color = Color.White;
         public float rotationDeg = 0;
 
         public DrawOptions()

@@ -4,8 +4,6 @@ namespace PixelBox
 {
     public class YieldInstruction
     {
-        public delegate void RefFloat(ref float e);
-
         public IEnumerator WaitWhile(Func<bool> condition)
         {
             while (condition())

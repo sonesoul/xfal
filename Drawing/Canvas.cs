@@ -1,5 +1,4 @@
-﻿
-using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework.Graphics;
 using System;
 
 namespace PixelBox.Drawing
@@ -14,7 +13,7 @@ namespace PixelBox.Drawing
     {
         public ref Vector2 Position => ref _position;
         public float Zoom { get; set; } = 1f;
-        public ref int BackgroundColor => ref _backgroundColor;
+        public ref Color BackgroundColor => ref _backgroundColor;
         public ref RenderOptions Options => ref _options;
 
         public RectangleF Bounds { get => _bounds; set => SetBounds(value); }
@@ -31,7 +30,7 @@ namespace PixelBox.Drawing
 
         protected Vector2 _position = Vector2.Zero;
         protected RenderOptions _options = new();
-        protected int _backgroundColor = Palette.TrueBlack;
+        protected Color _backgroundColor = Color.Black;
 
         public Canvas(RenderSource source, Vector2 size)
         {
@@ -44,7 +43,7 @@ namespace PixelBox.Drawing
             var graphics = Source.Graphics;
 
             graphics.SetRenderTarget(_target);
-            graphics.Clear(Palette.GetColor(BackgroundColor));
+            graphics.Clear(BackgroundColor);
 
             Source.SpriteBatch.Begin(Options, GetViewMatrix());
             Began?.Invoke();

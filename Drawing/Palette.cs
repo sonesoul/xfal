@@ -5,37 +5,26 @@ namespace PixelBox.Drawing
 {
     public static class Palette
     {
-        public const int TrueBlack = 0;
-        public const int TrueWhite = 1;
-
-        public const int SoftBlack = 2;
-        public const int SoftWhite = 3;
-
-        public const int DarkBlue = 4;
-        public const int DarkPurple = 5;
-        public const int DarkGreen = 6;
-        public const int Brown = 7;
-        public const int DarkGray = 8;
-        public const int LightGray = 9;
-        public const int White = 10;
-        public const int Red = 11;
-        public const int Orange = 12;
-        public const int Yellow = 13;
-        public const int Green = 14;
-        public const int Blue = 15;
-        public const int Indigo = 16;
-        public const int Pink = 17;
-        public const int Peach = 18;
-        public const int Transparent = 19;
+        public static Color Black => Colors[0];
+        public static Color DarkBlue => Colors[1];
+        public static Color DarkPurple => Colors[2];
+        public static Color DarkGreen => Colors[3];
+        public static Color Brown => Colors[4];
+        public static Color DarkGray => Colors[5];
+        public static Color LightGray => Colors[6];
+        public static Color White => Colors[7];
+        public static Color Red => Colors[8];
+        public static Color Orange => Colors[9];
+        public static Color Yellow => Colors[10];
+        public static Color Green => Colors[11];
+        public static Color Blue => Colors[12];
+        public static Color Indigo => Colors[13];
+        public static Color Pink => Colors[14];
+        public static Color Peach => Colors[15];
 
         private static readonly Color[] Colors = new[]
         {
-            new Color(0, 0, 0),         // True Black
-            new Color(255, 255, 255),   // True White
-
-            new Color(5, 5, 5),         // Soft Black
-            new Color(249, 249, 249),   // Soft White
-
+            new Color(0, 0, 0),         // Black
             new Color(29, 43, 83),      // Dark Blue
             new Color(126, 37, 83),     // Dark Purple
             new Color(0, 135, 81),      // Dark Green
@@ -51,7 +40,6 @@ namespace PixelBox.Drawing
             new Color(131, 118, 156),   // Indigo
             new Color(255, 119, 168),   // Pink
             new Color(255, 204, 170),   // Peach
-            new Color(0, 0, 0, 0)       // Transparent
         };
         
         public static Color GetColor(int index) => Colors[index];
