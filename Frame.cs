@@ -12,7 +12,7 @@ namespace PixelBox
     /// </summary>
     public static class Frame
     {
-        public static event Action Update, FixedUpdate, Draw;
+        public static event Action Update, FixedUpdate, Draw, PostDraw;
 
         private static float fixedUpdateBuffer = 0;
 
@@ -35,6 +35,6 @@ namespace PixelBox
             Time.Update(gameTime);
             Draw?.Invoke();
         }
-        public static void HandlePostDraw(GameTime gameTime) => Time.Update(gameTime);
+        public static void HandlePostDraw() => PostDraw?.Invoke();
     }
 }
