@@ -16,7 +16,7 @@ namespace PixelBox.Drawing
         public bool UseStretching { get; set; } = false;
 
         public event Action BeforeRender, Rendered;
-        public event Action BeforeDraw, Drawed;
+        public event Action BeforeDraw, Drawn;
         public event Action Cleared;
 
         private GraphicsDevice Graphics => Source.Graphics;
@@ -100,7 +100,7 @@ namespace PixelBox.Drawing
 
             batch.End();
 
-            Drawed?.Invoke();
+            Drawn?.Invoke();
         }
         public void Clear()
         {
