@@ -22,7 +22,6 @@ namespace PixelBox.Drawing
 
         private Rectangle destination;
         private Rectangle windowBounds;
-        private RectangleF canvasBounds;
 
         public Drawer(Canvas canvas)
         {
@@ -65,12 +64,11 @@ namespace PixelBox.Drawing
         {
             SpriteBatch batch = SpriteBatch;
 
-            if (canvasBounds != Canvas.Bounds || windowBounds != Graphics.Viewport.Bounds)
+            if (windowBounds != Graphics.Viewport.Bounds)
             {
                 destination = GetDestination();
 
                 windowBounds = Graphics.Viewport.Bounds;
-                canvasBounds = Canvas.Bounds;
             }
 
             batch.Begin(Options);
