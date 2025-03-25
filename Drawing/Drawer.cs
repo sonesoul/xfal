@@ -15,10 +15,6 @@ namespace PixelBox.Drawing
         public Canvas Canvas { get; set; }
         public bool UseStretching { get; set; } = false;
 
-        public event Action BeforeRender, Rendered;
-        public event Action BeforeDraw, Drawn;
-        public event Action Cleared;
-
         private GraphicsDevice Graphics => Source.Graphics;
         private SpriteBatch SpriteBatch => Source.SpriteBatch;
 
@@ -51,8 +47,6 @@ namespace PixelBox.Drawing
 
         public void RenderAll()
         {
-            BeforeRender?.Invoke();
-
             foreach (var item in renderers.Values)
             {
                 item.Render();
@@ -66,8 +60,6 @@ namespace PixelBox.Drawing
             }
 
             Canvas.End();
-
-            Rendered?.Invoke();
         }
         public void DrawCanvas()
         {
@@ -81,8 +73,6 @@ namespace PixelBox.Drawing
                 canvasBounds = Canvas.Bounds;
             }
 
-            BeforeDraw?.Invoke();
-            
             batch.Begin(Options);
             
             batch.Draw(
@@ -91,13 +81,10 @@ namespace PixelBox.Drawing
                 Color.White);
 
             batch.End();
-
-            Drawn?.Invoke();
         }
         public void Clear()
         {
             Graphics.Clear(BackgroundColor);
-            Cleared?.Invoke();
         }
 
         public Camera CreateCamera()
