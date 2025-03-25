@@ -37,15 +37,7 @@ namespace PixelBox.Drawing
         public void Add(T item, int order) => renderers.Add(order, item);
         public void Add(T item)
         {
-            if (renderers.Count == 0)
-            {
-                Add(item, 0);
-            }
-            else
-            {
-                var last = renderers.Last();
-                Add(last.Value, last.Key + 1);
-            }
+            Add(item, renderers.Count == 0 ? 0 : renderers.Last().Key + 1);
         }
         public void Remove(int order) => renderers.Remove(order);
         public T GetByOrder(int order) => renderers[order];
