@@ -117,7 +117,7 @@ namespace PixelBox.Drawing
         {
             Vector2 canvasPoint = ScreenToCanvasPoint(point);
 
-            return (canvasPoint / (Canvas.Size / camera.Size)).Floored();
+            return (canvasPoint / (Canvas.Size / camera.Size) + camera.Position).Floored();
         }
         public Vector2 ScreenToWorldPoint(Vector2 point) => ScreenToWorldPoint(point, MainCamera);
 
