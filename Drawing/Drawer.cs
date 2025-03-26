@@ -34,7 +34,7 @@ namespace PixelBox.Drawing
         public void AddCamera(Camera item, int order) => renderers.Add(order, item);
         public void AddCamera(Camera item)
         {
-            AddCamera(item, renderers.Last().Key + 1);
+            AddCamera(item, renderers.Count > 0 ? renderers.Last().Key + 1 : 0);
         }
         public void RemoveCamera(int order) => renderers.Remove(order);
         public Camera GetCamera(int order) => renderers[order];
