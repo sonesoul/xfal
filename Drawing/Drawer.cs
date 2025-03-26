@@ -111,7 +111,7 @@ namespace PixelBox.Drawing
             return (canvasPoint / zoom) + camera.Position - (camera.Bounds.Location / zoom);
         }
 
-        public Vector2 NormalizePoint(Vector2 point, Rectangle destination)
+        public static Vector2 NormalizePoint(Vector2 point, Rectangle destination)
         {
             return (point - destination.Location.ToVector2()) / destination.Size.ToVector2();
         }
