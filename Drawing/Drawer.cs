@@ -11,7 +11,7 @@ namespace PixelBox.Drawing
         public RenderOptions Options { get; set; } = new();
 
         public Canvas Canvas { get; set; }
-        
+
         public bool UseStretching { get; set; } = false;
         public Color BackgroundColor { get; set; } = Color.Black;
 
@@ -60,7 +60,7 @@ namespace PixelBox.Drawing
 
             void DrawItem(Camera item)
             {
-                SpriteBatch.Draw(item.CurrentPicture, Canvas.Bounds.ToRectangle(), Color.White);
+                SpriteBatch.Draw(item.CurrentPicture, new Rectangle(windowBounds.Location, Canvas.Size.ToPoint()), Color.White);
             }
 
             DrawItem(MainCamera);
@@ -111,14 +111,13 @@ namespace PixelBox.Drawing
             Vector2 normalizedPoint = NormalizePoint(point, destination);
             Vector2 canvasPoint = normalizedPoint * Canvas.Size;
 
-            return ((canvasPoint + Canvas.Location) / Canvas.Zoom).Floored();
+            return (canvasPoint / Canvas.Zoom).Floored();
         }
         public Vector2 ScreenToWorldPoint(Vector2 point, Camera camera)
         {
             Vector2 canvasPoint = ScreenToCanvasPoint(point);
-            float zoom = camera.Zoom;
-            
-            return (canvasPoint / zoom) + camera.Position - (camera.Bounds.Location / zoom);
+
+            return (canvasPoint / (Canvas.Size / camera.Size)).Floored();
         }
         public Vector2 ScreenToWorldPoint(Vector2 point) => ScreenToWorldPoint(point, MainCamera);
 
@@ -131,24 +130,20 @@ namespace PixelBox.Drawing
         {
             if (UseStretching)
             {
-                return StretchRectangle(Canvas.Bounds, Graphics.Viewport.Bounds);
+                return Graphics.Viewport.Bounds;
             }
             else
             {
-                return FitRectangle(Canvas.Bounds, Graphics.Viewport.Bounds);
+                return FitRectangle(Canvas.Size, Graphics.Viewport.Bounds.Size.ToVector2());
             }
         }
 
-        public static Rectangle FitRectangle(in RectangleF source, in Rectangle target)
+        public static Rectangle FitRectangle(in Vector2 sourceSize, in Vector2 targetSize)
         {
-            Vector2 sourceSize = source.Size;
-            Vector2 targetSize = target.Size.ToVector2();
-
             Point size = targetSize.ToPoint();
-            Point location = target.Location + source.Location.ToPoint();
-
-            int targetWidth = target.Width;
-            int targetHeight = target.Height;
+            
+            int targetWidth = (int)targetSize.X;
+            int targetHeight = (int)targetSize.Y;
 
             float originalAspect = sourceSize.X / sourceSize.Y;
             float targetAspect = (float)targetWidth / targetHeight;
@@ -158,9 +153,9 @@ namespace PixelBox.Drawing
             {
                 int finalWidth = (int)(size.Y * originalAspect);
 
-                Point finalLocation = new Point(
+                Point finalLocation = new(
                     (targetWidth - finalWidth) / 2,
-                    (targetHeight / 2) - (size.Y / 2)) + location;
+                    (targetHeight / 2) - (size.Y / 2));
 
                 Point finalSize = new(finalWidth, size.Y);
 
@@ -171,22 +166,22 @@ namespace PixelBox.Drawing
             {
                 int finalHeight = (int)(size.X / originalAspect);
 
-                Point finalLocation = new Point(
+                Point finalLocation = new(
                     (targetWidth / 2) - (size.X / 2), 
-                    (targetHeight - finalHeight) / 2) + location;
+                    (targetHeight - finalHeight) / 2);
 
                 Point finalSize = new(size.X, finalHeight);
 
                 return new(finalLocation, finalSize);
             }
         }
-        public static Rectangle StretchRectangle(in RectangleF source, in Rectangle target)
+        public static Rectangle StretchRectangle(in Vector2 sourceSize, in Rectangle target)
         {
             Vector2 targetSize = target.Size.ToVector2();
 
             Point size = targetSize.ToPoint();
-            Point location = target.Location + source.Location.ToPoint();
-
+            Point location = target.Location;
+            
             return new Rectangle(location, size);
         }
     }

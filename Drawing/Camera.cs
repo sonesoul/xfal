@@ -59,6 +59,6 @@ namespace PixelBox.Drawing
             base.SetSource(source);
             Context = new(source);
         }
-        public override string ToString() => $"{Position} {Bounds.Width}x{Bounds.Height}";
+        public override string ToString() => $"{Position} {Size.X}x{Size.Y}";
     }
 }

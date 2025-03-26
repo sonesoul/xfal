@@ -10,11 +10,9 @@ namespace PixelBox.Drawing
         public ref Color BackgroundColor => ref _backgroundColor;
         public ref RenderOptions Options => ref _options;
 
-        public RectangleF Bounds { get => _bounds; set => SetBounds(value); }
         public RenderSource Source { get => _source; set => SetSource(value); }
-        public Vector2 Size { get => Bounds.Size; set => SetSize(value); } 
-        public Vector2 Center => Bounds.Center;
-        public ref Vector2 Location => ref _bounds.Location;
+        public Vector2 Size { get => _size; set => SetSize(value); } 
+        
 
         public event Action Began, Ended;
 
@@ -26,10 +24,12 @@ namespace PixelBox.Drawing
         protected RenderOptions _options = new();
         protected Color _backgroundColor = Color.Black;
 
+        protected Vector2 _size;
+
         public Canvas(RenderSource source, Vector2 size)
         {
             Source = source;
-            Bounds = new(Vector2.Zero, size);
+            SetSize(size);
         }
         
         public virtual void Begin()
@@ -64,7 +64,7 @@ namespace PixelBox.Drawing
         protected virtual void SetSize(Vector2 newSize)
         {
             _target = new(Source.Graphics, (int)newSize.X, (int)newSize.Y);
-            _bounds.Size = newSize;
+            _size = newSize;
         }
         protected virtual void SetSource(RenderSource source)
         {
