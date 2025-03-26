@@ -3,13 +3,7 @@ using System;
 
 namespace PixelBox.Drawing
 {
-    public interface ICanvas
-    {
-        public ref RenderOptions Options { get; }
-        public RectangleF Bounds { get; }
-    }
-
-    public class Canvas : ICanvas
+    public class Canvas
     {
         public ref Vector2 Position => ref _position;
         public float Zoom { get; set; } = 1f;

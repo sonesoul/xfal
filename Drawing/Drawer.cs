@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace PixelBox.Drawing
 {
-    public class Drawer<T> where T : IRenderer
+    public class Drawer
     {
         public Color BackgroundColor { get; set; } = Color.Black;
         
@@ -13,12 +13,13 @@ namespace PixelBox.Drawing
         public RenderOptions Options { get; set; } = new();
 
         public Canvas Canvas { get; set; }
+        
         public bool UseStretching { get; set; } = false;
 
         private GraphicsDevice Graphics => Source.Graphics;
         private SpriteBatch SpriteBatch => Source.SpriteBatch;
 
-        private readonly SortedDictionary<int, T> renderers = new();
+        private readonly SortedDictionary<int, Camera> renderers = new();
 
         private Rectangle destination;
         private Rectangle windowBounds;
@@ -26,16 +27,17 @@ namespace PixelBox.Drawing
         public Drawer(Canvas canvas)
         {
             Canvas = canvas;
+            AddCamera(CreateCamera(), 0);
         }
         public Drawer(RenderSource source, Vector2 size) : this(new Canvas(source, size)) { }
 
-        public void Add(T item, int order) => renderers.Add(order, item);
-        public void Add(T item)
+        public void AddCamera(Camera item, int order) => renderers.Add(order, item);
+        public void AddCamera(Camera item)
         {
-            Add(item, renderers.Count == 0 ? 0 : renderers.Last().Key + 1);
+            AddCamera(item, renderers.Last().Key + 1);
         }
-        public void Remove(int order) => renderers.Remove(order);
-        public T GetByOrder(int order) => renderers[order];
+        public void RemoveCamera(int order) => renderers.Remove(order);
+        public Camera GetCamera(int order) => renderers[order];
 
         public void Draw()
         {
@@ -55,7 +57,7 @@ namespace PixelBox.Drawing
 
             foreach (var item in renderers.Values)
             {
-                SpriteBatch.Draw(item.CurrentPicture, item.Bounds.Location, Color.White);
+                SpriteBatch.Draw(item.CurrentPicture, Canvas.Bounds.ToRectangle(), Color.White);
             }
 
             Canvas.End();

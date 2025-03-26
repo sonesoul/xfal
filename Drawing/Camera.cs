@@ -9,7 +9,7 @@ namespace PixelBox.Drawing
     public delegate void DrawAction(DrawContext context);
 
     [DebuggerDisplay("{ToString(),nq}")]
-    public class Camera : Canvas, IRenderer
+    public class Camera : Canvas
     {
         public const int DefaultLayer = 0;
 
