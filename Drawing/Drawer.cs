@@ -111,7 +111,7 @@ namespace PixelBox.Drawing
             Vector2 normalizedPoint = NormalizePoint(point, destination);
             Vector2 canvasPoint = normalizedPoint * Canvas.Size;
 
-            return (canvasPoint / Canvas.Zoom).Floored();
+            return canvasPoint.Floored();
         }
         public Vector2 ScreenToWorldPoint(Vector2 point, Camera camera)
         {

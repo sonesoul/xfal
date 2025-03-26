@@ -6,7 +6,7 @@ namespace PixelBox.Drawing
     public class Canvas
     {
         public ref Vector2 Position => ref _position;
-        public float Zoom { get; set; } = 1f;
+
         public ref Color BackgroundColor => ref _backgroundColor;
         public ref RenderOptions Options => ref _options;
 
@@ -49,7 +49,7 @@ namespace PixelBox.Drawing
             Ended?.Invoke();
         }
 
-        public virtual Matrix GetViewMatrix() => Matrix.CreateTranslation(new(-Position, 0)) * Matrix.CreateScale(Zoom, Zoom, 1);
+        public virtual Matrix GetViewMatrix() => Matrix.CreateTranslation(new(-Position, 0));
         public virtual RenderTarget2D GetRenderTarget() => _target;
 
         protected virtual void SetBounds(RectangleF newBounds)
