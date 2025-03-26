@@ -12,9 +12,6 @@ namespace PixelBox.Drawing
 
         public RenderSource Source { get => _source; set => SetSource(value); }
         public Vector2 Size { get => _size; set => SetSize(value); } 
-        
-
-        public event Action Began, Ended;
 
         protected RectangleF _bounds;
         protected RenderSource _source;
@@ -40,13 +37,11 @@ namespace PixelBox.Drawing
             graphics.Clear(BackgroundColor);
 
             Source.SpriteBatch.Begin(Options, GetViewMatrix());
-            Began?.Invoke();
         }
         public virtual void End()
         {
             Source.SpriteBatch.End();
             Source.Graphics.SetRenderTarget(null);
-            Ended?.Invoke();
         }
 
         public virtual Matrix GetViewMatrix() => Matrix.CreateTranslation(new(-Position, 0));
