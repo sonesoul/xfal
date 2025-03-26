@@ -7,14 +7,15 @@ namespace PixelBox.Drawing
 {
     public class Drawer
     {
-        public Color BackgroundColor { get; set; } = Color.Black;
-        
         public RenderSource Source => Canvas.Source;
         public RenderOptions Options { get; set; } = new();
 
         public Canvas Canvas { get; set; }
         
         public bool UseStretching { get; set; } = false;
+        public Color BackgroundColor { get; set; } = Color.Black;
+
+        public Camera MainCamera { get; }
 
         private GraphicsDevice Graphics => Source.Graphics;
         private SpriteBatch SpriteBatch => Source.SpriteBatch;
@@ -27,7 +28,7 @@ namespace PixelBox.Drawing
         public Drawer(Canvas canvas)
         {
             Canvas = canvas;
-            AddCamera(CreateCamera(), 0);
+            MainCamera = CreateCamera();
         }
         public Drawer(RenderSource source, Vector2 size) : this(new Canvas(source, size)) { }
 
@@ -48,6 +49,8 @@ namespace PixelBox.Drawing
 
         public void RenderAll()
         {
+            MainCamera.Render();
+
             foreach (var item in renderers.Values)
             {
                 item.Render();
@@ -55,9 +58,16 @@ namespace PixelBox.Drawing
 
             Canvas.Begin();
 
-            foreach (var item in renderers.Values)
+            void DrawItem(Camera item)
             {
                 SpriteBatch.Draw(item.CurrentPicture, Canvas.Bounds.ToRectangle(), Color.White);
+            }
+
+            DrawItem(MainCamera);
+
+            foreach (var item in renderers.Values)
+            {
+                DrawItem(item);
             }
 
             Canvas.End();
@@ -110,6 +120,7 @@ namespace PixelBox.Drawing
             
             return (canvasPoint / zoom) + camera.Position - (camera.Bounds.Location / zoom);
         }
+        public Vector2 ScreenToWorldPoint(Vector2 point) => ScreenToWorldPoint(point, MainCamera);
 
         public static Vector2 NormalizePoint(Vector2 point, Rectangle destination)
         {
