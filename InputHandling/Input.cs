@@ -8,7 +8,7 @@ namespace PixelBox.InputHandling
 {
     public static class Input
     {
-        public static event Action<Key> KeyPressed, KeyHolded, KeyReleased;
+        public static event Action<Key> KeyPressed, KeyHeld, KeyReleased;
 
         public static AxisCulture AxisCulture { get; set; } = AxisCulture.WASD;
         public static Vector2 Axis => _axis;
@@ -56,7 +56,7 @@ namespace PixelBox.InputHandling
                 }
                 else
                 {
-                    KeyHolded?.Invoke(key);
+                    KeyHeld?.Invoke(key);
                 }
             }
 
@@ -164,7 +164,7 @@ namespace PixelBox.InputHandling
             AxisCulture.Deconstruct(out var up, out var down, out var left, out var right);
 
             _axis.X = (IsKeyDown(right) ? 1 : 0) - (IsKeyDown(left) ? 1 : 0);
-            _axis.Y = (IsKeyDown(up) ? 1 : 0) - (IsKeyDown(down) ? 1 : 0);
+            _axis.Y = (IsKeyDown(down) ? 1 : 0) - (IsKeyDown(up) ? 1 : 0);
         }
     }
 }
