@@ -28,7 +28,7 @@ namespace PixelBox
                     }
                     catch (Exception ex)
                     {
-                        throw new AggregateException($"StepTask inner exception: {ex.Message}");
+                        throw new AggregateException($"({nameof(StepTask)} inner exception) {ex.GetType()}: {ex.Message}");
                     }
                 }
             }
@@ -68,36 +68,38 @@ namespace PixelBox
 
         public static YieldInstruction Yields { get; } = new();
 
-        public IEnumerator Iterator { get; private set; }
-        public bool IsRunning { get; private set; }
+        public Func<IEnumerator> IteratorFactory { get; set; }
+        public IEnumerator Iterator { get; private set; } = null;
+        public bool IsRunning => Iterator != null;
 
         public event Action Completed;
 
-        public StepTask()
+        public StepTask(Func<IEnumerator> factory)
         {
-            Iterator = null;
+            IteratorFactory = factory;
         }
-        public StepTask(IEnumerator iterator)
-        {
-            Begin(iterator);
-        }
-
-        public void Begin(IEnumerator iterator)
+       
+        public void Start()
         {
             Break();
 
-            Iterator = iterator ?? throw new ArgumentNullException(nameof(iterator), "Iterator can't be null.");
+            if (IteratorFactory == null)
+                return;
+
+            Iterator = IteratorFactory.Invoke();
+
+            if (Iterator == null)
+                return;
 
             Manager.Register(this);
-            IsRunning = true;
         }
         public void Break()
         {
-            if (!IsRunning || Iterator == null)
+            if (!IsRunning)
                 return;
-            
+
+            Iterator = null;
             Manager.Unregister(this);
-            IsRunning = false;
         }
         public void Complete()
         {
@@ -105,15 +107,10 @@ namespace PixelBox
             Completed?.Invoke();
         }
 
-        public static StepTask Run(IEnumerator iterator, Action completeCallback = null)
+        public static StepTask Run(Func<IEnumerator> factory)
         {
-            StepTask task = new(iterator);
-
-            if (completeCallback != null)
-            {
-                task.Completed += completeCallback;
-            }
-
+            StepTask task = new(factory);
+            task.Start();
             return task;
         }
     }
