@@ -60,7 +60,7 @@ namespace PixelBox.Drawing
 
             void DrawItem(Camera item)
             {
-                SpriteBatch.Draw(item.CurrentPicture, new Rectangle(windowBounds.Location, Canvas.Size.ToPoint()), Color.White);
+                SpriteBatch.Draw(item.RenderTarget, new Rectangle(windowBounds.Location, Canvas.Size.ToPoint()), Color.White);
             }
 
             DrawItem(MainCamera);
@@ -86,7 +86,7 @@ namespace PixelBox.Drawing
             batch.Begin(Options);
             
             batch.Draw(
-                Canvas.GetRenderTarget(),
+                Canvas.RenderTarget,
                 destination, 
                 Color.White);
 

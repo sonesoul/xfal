@@ -10,11 +10,11 @@ namespace PixelBox.Drawing
         public ref Color BackgroundColor => ref _backgroundColor;
         public ref RenderOptions Options => ref _options;
 
+        public RenderTarget2D RenderTarget { get; private set; }
         public RenderSource Source { get => _source; set => SetSource(value); }
         public Vector2 Size { get => _size; set => SetSize(value); } 
 
         protected RenderSource _source;
-        protected RenderTarget2D _target;
 
         protected Vector2 _position = Vector2.Zero;
         protected RenderOptions _options = new();
@@ -32,7 +32,7 @@ namespace PixelBox.Drawing
         {
             var graphics = Source.Graphics;
 
-            graphics.SetRenderTarget(_target);
+            graphics.SetRenderTarget(RenderTarget);
             graphics.Clear(BackgroundColor);
 
             Source.SpriteBatch.Begin(Options, GetViewMatrix());
@@ -44,11 +44,10 @@ namespace PixelBox.Drawing
         }
 
         public virtual Matrix GetViewMatrix() => Matrix.CreateTranslation(new(-Position, 0));
-        public virtual RenderTarget2D GetRenderTarget() => _target;
         
         protected virtual void SetSize(Vector2 newSize)
         {
-            _target = new(Source.Graphics, (int)newSize.X, (int)newSize.Y);
+            RenderTarget = new(Source.Graphics, (int)newSize.X, (int)newSize.Y);
             _size = newSize;
         }
         protected virtual void SetSource(RenderSource source)

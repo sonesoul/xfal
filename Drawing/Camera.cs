@@ -14,7 +14,6 @@ namespace PixelBox.Drawing
         public const int DefaultLayer = 0;
 
         public DrawContext Context { get; private set; }
-        public Texture2D CurrentPicture => _target;
         public bool IsVisible { get; set; } = true;
 
         private readonly SortedDictionary<int, HashSet<DrawAction>> renderPipeline = new();
