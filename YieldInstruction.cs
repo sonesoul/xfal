@@ -11,30 +11,6 @@ namespace PixelBox
                 yield return null;
             }
         }
-        public IEnumerator WaitForFixedUpdate()
-        {
-            bool exit = false;
-            void TriggerExit() => exit = true;
-
-            Frame.FixedUpdate += TriggerExit;
-            while (!exit)
-            {
-                yield return null;
-            }
-            Frame.FixedUpdate -= TriggerExit;
-        }
-        public IEnumerator WaitForDraw() 
-        {
-            bool exit = false;
-            void TriggerExit() => exit = true;
-
-            Frame.Draw += TriggerExit;
-            while (!exit)
-            {
-                yield return null;
-            }
-            Frame.Draw -= TriggerExit;
-        }
 
         public IEnumerator WaitForSeconds(float time)
         {
