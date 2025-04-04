@@ -13,7 +13,6 @@ namespace PixelBox.Drawing
         public RenderSource Source { get => _source; set => SetSource(value); }
         public Vector2 Size { get => _size; set => SetSize(value); } 
 
-        protected RectangleF _bounds;
         protected RenderSource _source;
         protected RenderTarget2D _target;
 
@@ -46,16 +45,7 @@ namespace PixelBox.Drawing
 
         public virtual Matrix GetViewMatrix() => Matrix.CreateTranslation(new(-Position, 0));
         public virtual RenderTarget2D GetRenderTarget() => _target;
-
-        protected virtual void SetBounds(RectangleF newBounds)
-        {
-            if (_bounds.Size != newBounds.Size)
-            {
-                SetSize(newBounds.Size);
-            }
-
-            _bounds.Location = newBounds.Location;
-        }
+        
         protected virtual void SetSize(Vector2 newSize)
         {
             _target = new(Source.Graphics, (int)newSize.X, (int)newSize.Y);
