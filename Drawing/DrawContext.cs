@@ -18,7 +18,7 @@ namespace PixelBox.Drawing
             PixelTexture = source.Pixel;
         }
 
-        public void String(string str, SpriteFont font, Vector2 position, Vector2 scale, Vector2 origin, Color color, float rotation = 0)
+        public void String(string str, SpriteFont font, Vector2 position, Color color, Vector2 scale, Vector2 origin, float rotationRad = 0)
         {
             SpriteEffects spriteEffects = SpriteEffects.None;
 
@@ -34,17 +34,17 @@ namespace PixelBox.Drawing
                 scale.Y = -scale.Y;
             }
 
-            SpriteBatch.DrawString(font, str, position, color, rotation, origin, scale, spriteEffects, 0);
+            SpriteBatch.DrawString(font, str, position, color, rotationRad, origin, scale, spriteEffects, 0);
         }
-        public void String(string str, SpriteFont font, Vector2 position, Vector2 scale, Color color)
+        public void String(string str, SpriteFont font, Vector2 position, Color color)
         {
             String(
-                str,
-                font,
-                position,
-                scale,
-                font.MeasureString(str) / 2,
-                color);
+                str, 
+                font, 
+                position, 
+                color, 
+                Vector2.One, 
+                font.MeasureString(str) / 2);
         }
         public void String(string str, SpriteFont font, in DrawOptions options)
         {
@@ -52,9 +52,9 @@ namespace PixelBox.Drawing
                 str,
                 font,
                 options.position,
-                options.origin,
-                options.scale,
                 options.color,
+                options.scale,
+                options.origin,
                 options.rotationDeg.Deg2Rad());
         }
 
