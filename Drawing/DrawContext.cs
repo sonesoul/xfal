@@ -87,7 +87,7 @@ namespace PixelBox.Drawing
                 0);
         }
 
-        public void HollowRect(Rectangle rect, Color color, int boundThickness = 1)
+        public void Rectangle(Rectangle rect, Color color, int boundThickness)
         {
             rect.Size = (rect.Size.ToVector2().Both() + 1).ToPoint();
             Rectangle[] rects = new Rectangle[4];
@@ -109,7 +109,7 @@ namespace PixelBox.Drawing
             SpriteBatch.Draw(PixelTexture, rect, color);
         }
 
-        public void HollowPoly(List<Vector2> vertices, Color color, float boundThickness)
+        public void Polygon(List<Vector2> vertices, Color color, float boundThickness)
         {
             for (int i = 0; i < vertices.Count; i++)
             {
@@ -141,7 +141,7 @@ namespace PixelBox.Drawing
             SpriteBatch.Draw(PixelTexture, position, color);
         }
 
-        public void HollowPoly(Body body, PolygonShape shape, Color color, float boundThickness)
+        public void Polygon(Body body, PolygonShape shape, Color color, float boundThickness)
         {
             List<Vector2> vertices = new(shape.Vertices.Count);
 
@@ -150,7 +150,7 @@ namespace PixelBox.Drawing
                 vertices.Add(vertex.RotateAround(Vector2.Zero, body.Rotation) + body.Position);
             }
        
-            HollowPoly(vertices, color, boundThickness);
+            Polygon(vertices, color, boundThickness);
         }
     }
     public struct DrawOptions
