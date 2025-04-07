@@ -55,7 +55,7 @@ namespace PixelBox.Drawing
                 options.color,
                 options.scale,
                 options.origin,
-                options.rotationDeg.Deg2Rad());
+                options.rotationRad);
         }
 
         public void Texture(Texture2D texture, in DrawOptions options)
@@ -80,7 +80,7 @@ namespace PixelBox.Drawing
                 options.position,
                 null,
                 options.color,
-                options.rotationDeg.Deg2Rad(),
+                options.rotationRad,
                 options.origin,
                 scale,
                 spriteEffects,
@@ -160,7 +160,7 @@ namespace PixelBox.Drawing
         public Vector2 scale = Vector2.One;
 
         public Color color = Color.White;
-        public float rotationDeg = 0;
+        public float rotationRad = 0;
 
         public DrawOptions()
         {
