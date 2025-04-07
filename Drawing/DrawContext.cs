@@ -44,7 +44,7 @@ namespace PixelBox.Drawing
                 position, 
                 color, 
                 Vector2.One, 
-                font.MeasureString(str) / 2);
+                Vector2.Zero);
         }
         public void String(string str, SpriteFont font, in DrawOptions options)
         {
