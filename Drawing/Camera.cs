@@ -36,7 +36,7 @@ namespace PixelBox.Drawing
 
             renderPipeline[layer].Add(drawAction);
         }
-        public void Unregister(DrawAction drawAction, int layer) => renderPipeline[layer].Remove(drawAction);
+        public void Unregister(DrawAction drawAction, int layer = DefaultLayer) => renderPipeline[layer].Remove(drawAction);
 
         public void Render()
         {
