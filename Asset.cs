@@ -6,31 +6,19 @@ using System.IO;
 
 namespace PixelBox
 {
-    public class Asset<T>
+    public class Asset
     {
         public static ContentManager Content { get; set; }
 
-        public T Value { get; private set; } 
-        public string Name { get; private set; }
+        protected Asset() { }
 
-        public Asset(string path)
-        {
-            Value = Load(path);
-            Name = Path.GetFileNameWithoutExtension(path);
-        }
-        public Asset(T value, string name)
-        {
-            Value = value;
-            Name = name;
-        }
-
-        public static T Load(string path) => Content.Load<T>(path);
-        public static List<Asset<T>> LoadFolder(string folder)
+        public static T Load<T>(string path) => Content.Load<T>(path);
+        public static List<Asset<T>> LoadFolder<T>(string folder)
         {
             string folderPath = GetFolderPath(folder);
 
             string[] filePaths = Directory.GetFiles(folderPath, "*.xnb");
-            
+
             List<Asset<T>> assets = new();
             foreach (string filePath in filePaths)
             {
@@ -42,11 +30,25 @@ namespace PixelBox
 
             return assets;
         }
-
-        public static string GetFolderPath(string folder)
+        
+        private static string GetFolderPath(string folder)
         {
             return Path.Combine(Environment.CurrentDirectory, Content.RootDirectory, folder);
-        }   
+        }
+    }
+
+    public class Asset<T> : Asset
+    {
+        public T Value { get; } 
+        public string Name { get; }
+        public string FilePath { get; }
+
+        public Asset(string path)
+        {
+            FilePath = path;
+            Name = Path.GetFileNameWithoutExtension(path);
+            Value = Load<T>(path);
+        }
 
         public static implicit operator T(Asset<T> asset) => asset.Value;
     }
