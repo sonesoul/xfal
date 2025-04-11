@@ -45,5 +45,7 @@ namespace PixelBox
         {
             return Path.Combine(Environment.CurrentDirectory, Content.RootDirectory, folder);
         }   
+
+        public static implicit operator T(Asset<T> asset) => asset.Value;
     }
 }
