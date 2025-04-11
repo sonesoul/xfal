@@ -11,14 +11,11 @@ namespace PixelBox
         public static ContentManager Content { get; set; }
 
         public T Value { get; private set; } 
-
         public string Name { get; private set; }
-        public string FilePath { get; private set; }
 
         public Asset(string path)
         {
             Value = Load(path);
-            FilePath = path;
             Name = Path.GetFileNameWithoutExtension(path);
         }
 
