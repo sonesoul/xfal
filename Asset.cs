@@ -6,38 +6,44 @@ using System.IO;
 
 namespace PixelBox
 {
-    public static class Asset
+    public class Asset<T>
     {
         public static ContentManager Content { get; set; }
 
-        public static T Load<T>(string path) => Content.Load<T>(path);
-        public static Dictionary<string, T> LoadFolder<T>(string contentFolder)
+        public T Value { get; private set; } 
+
+        public string Name { get; private set; }
+        public string FilePath { get; private set; }
+
+        public Asset(string path)
         {
-            string folderPath = GetFolderPath(contentFolder);
+            Value = Load(path);
+            FilePath = path;
+            Name = Path.GetFileNameWithoutExtension(path);
+        }
+
+        public static T Load(string path) => Content.Load<T>(path);
+        public static List<Asset<T>> LoadFolder(string folder)
+        {
+            string folderPath = GetFolderPath(folder);
 
             string[] filePaths = Directory.GetFiles(folderPath, "*.xnb");
-
-            List<string> fileNames = new();
-
-            foreach (string path in filePaths)
+            
+            List<Asset<T>> assets = new();
+            foreach (string filePath in filePaths)
             {
-                fileNames.Add(Path.GetFileNameWithoutExtension(path));
-            }
+                string name = Path.GetFileNameWithoutExtension(filePath);
+                string path = Path.Combine(folder, name);
 
-            Dictionary<string, T> assets = new();
-            foreach (string name in fileNames)
-            {
-                T asset = Load<T>(Path.Combine(contentFolder, name));
-
-                assets.Add(name, asset);
+                assets.Add(new Asset<T>(path));
             }
 
             return assets;
         }
 
-        public static string GetFolderPath(string path)
+        public static string GetFolderPath(string folder)
         {
-            return Path.Combine(Environment.CurrentDirectory, Content.RootDirectory, path);
+            return Path.Combine(Environment.CurrentDirectory, Content.RootDirectory, folder);
         }   
     }
 }
