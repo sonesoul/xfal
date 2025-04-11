@@ -18,6 +18,11 @@ namespace PixelBox
             Value = Load(path);
             Name = Path.GetFileNameWithoutExtension(path);
         }
+        public Asset(T value, string name)
+        {
+            Value = value;
+            Name = name;
+        }
 
         public static T Load(string path) => Content.Load<T>(path);
         public static List<Asset<T>> LoadFolder(string folder)
