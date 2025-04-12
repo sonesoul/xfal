@@ -1,4 +1,7 @@
-﻿namespace PixelBox
+﻿using Microsoft.Xna.Framework;
+using PixelBox.Extensions;
+
+namespace PixelBox
 {
     public static class Time
     {
