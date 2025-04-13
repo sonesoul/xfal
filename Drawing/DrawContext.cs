@@ -148,7 +148,7 @@ namespace PixelBox.Drawing
 
             foreach (var vertex in shape.Vertices) 
             {
-                vertices.Add(vertex.RotateAround(Vector2.Zero, body.Rotation) + body.Position);
+                vertices.Add(vertex.RotatedAround(Vector2.Zero, body.Rotation) + body.Position);
             }
        
             Polygon(vertices, color, boundThickness);
