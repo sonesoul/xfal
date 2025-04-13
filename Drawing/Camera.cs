@@ -15,6 +15,7 @@ namespace PixelBox.Drawing
         public DrawContext Context { get; private set; }
         public bool IsVisible { get; set; } = true;
 
+        //TODO: split RenderOptions between layers of camera instead of cameras 
         private readonly SortedDictionary<int, HashSet<DrawAction>> renderPipeline = new();
 
         public Camera(RenderSource source, Vector2 size) : base(source, size)
