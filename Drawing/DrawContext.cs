@@ -69,14 +69,14 @@ namespace PixelBox.Drawing
             {
                 spriteEffects |= SpriteEffects.FlipHorizontally;
                 scale.X = -scale.X;
-                origin.X = texture.Width - origin.X + 1;
+                origin.X = texture.Width - origin.X - 1;
             }
 
             if (scale.Y < 0)
             {
                 spriteEffects |= SpriteEffects.FlipVertically;
                 scale.Y = -scale.Y;
-                origin.Y = texture.Height - origin.Y + 1;
+                origin.Y = texture.Height - origin.Y - 1;
             }
 
             SpriteBatch.Draw(
