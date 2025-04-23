@@ -25,13 +25,13 @@ namespace PixelBox.Drawing
 
             if (scale.X < 0)
             {
-                spriteEffects &= SpriteEffects.FlipHorizontally;
+                spriteEffects |= SpriteEffects.FlipHorizontally;
                 scale.X = -scale.X;
             }
 
             if (scale.Y < 0)
             {
-                spriteEffects &= SpriteEffects.FlipVertically;
+                spriteEffects |= SpriteEffects.FlipVertically;
                 scale.Y = -scale.Y;
             }
 
@@ -66,13 +66,13 @@ namespace PixelBox.Drawing
 
             if (scale.X < 0)
             {
-                spriteEffects &= SpriteEffects.FlipHorizontally;
+                spriteEffects |= SpriteEffects.FlipHorizontally;
                 scale.X = -scale.X;
             }
 
             if (scale.Y < 0)
             {
-                spriteEffects &= SpriteEffects.FlipVertically;
+                spriteEffects |= SpriteEffects.FlipVertically;
                 scale.Y = -scale.Y;
             }
 
