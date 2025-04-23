@@ -63,17 +63,20 @@ namespace PixelBox.Drawing
         {
             SpriteEffects spriteEffects = SpriteEffects.None;
             Vector2 scale = options.scale;
+            Vector2 origin = options.origin;
 
             if (scale.X < 0)
             {
                 spriteEffects |= SpriteEffects.FlipHorizontally;
                 scale.X = -scale.X;
+                origin.X = texture.Width - scale.X;
             }
 
             if (scale.Y < 0)
             {
                 spriteEffects |= SpriteEffects.FlipVertically;
                 scale.Y = -scale.Y;
+                origin.Y = texture.Height - scale.Y;
             }
 
             SpriteBatch.Draw(
@@ -82,7 +85,7 @@ namespace PixelBox.Drawing
                 null,
                 options.color,
                 options.rotationRad,
-                options.origin,
+                origin,
                 scale,
                 spriteEffects,
                 0);
