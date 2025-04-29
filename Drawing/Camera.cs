@@ -5,7 +5,7 @@ using System.Diagnostics;
 
 namespace PixelBox.Drawing
 {
-    public delegate void DrawAction(DrawContext context);
+    public delegate void DrawAction(DrawContext draw);
 
     [DebuggerDisplay("{ToString(),nq}")]
     public class Camera : Canvas
