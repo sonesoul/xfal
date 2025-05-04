@@ -31,8 +31,8 @@ namespace PixelBox.Extensions
         public static int Abs(this int value) => Math.Abs(value);
         public static float Abs(this float value) => Math.Abs(value);
         
-        public static float Deg2Rad(this float degrees) => degrees * (float)Math.PI / 180;
-        public static float Rad2Deg(this float radians) => radians * 180f / (float)Math.PI;
+        public static float Deg2Rad(this float degrees) => degrees * MathF.PI / 180;
+        public static float Rad2Deg(this float radians) => radians * 180f / MathF.PI;
 
         public static float Floored(this float value) => (float)Math.Floor(value);
         public static float Ceiled(this float value) => (float)Math.Ceiling(value);
