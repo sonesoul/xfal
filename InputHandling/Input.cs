@@ -49,9 +49,8 @@ namespace PixelBox.InputHandling
 
             foreach (var key in pressedKeys)
             {
-                if (!wasPressed.Contains(key))
+                if (wasPressed.Add(key))
                 {
-                    wasPressed.Add(key);
                     KeyPressed?.Invoke(key);
                 }
                 else
