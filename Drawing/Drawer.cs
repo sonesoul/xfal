@@ -9,12 +9,14 @@ namespace PixelBox.Drawing
 {
     public class Drawer
     {
+        public delegate Rectangle ScaleFunction(in Vector2 source, in Rectangle target);
+
         public RenderSource Source => Canvas.Source;
         public RenderOptions Options { get; set; } = new();
 
         public Canvas Canvas { get; set; }
 
-        public bool UseStretching { get; set; } = false;
+        public ScaleFunction ScaleFunc { get; set; } = null;
         public Color BackgroundColor { get; set; } = Color.Black;
 
         public Camera MainCamera { get; }
@@ -80,8 +82,7 @@ namespace PixelBox.Drawing
 
             if (windowBounds != Graphics.Viewport.Bounds)
             {
-                destination = GetDestination();
-
+                destination = ScaleFunc.Invoke(Canvas.Size, Graphics.Viewport.Bounds);
                 windowBounds = Graphics.Viewport.Bounds;
             }
 
@@ -126,65 +127,6 @@ namespace PixelBox.Drawing
         public static Vector2 NormalizePoint(Vector2 point, Rectangle destination)
         {
             return (point - destination.Location.ToVector2()) / destination.Size.ToVector2();
-        }
-        
-        public Rectangle GetDestination()
-        {
-            if (UseStretching)
-            {
-                return Graphics.Viewport.Bounds;
-            }
-            else
-            {
-                return FitRectangle(Canvas.Size, Graphics.Viewport.Bounds.Size.ToVector2());
-            }
-        }
-
-        public static Rectangle FitRectangle(in Vector2 sourceSize, in Vector2 targetSize)
-        {
-            Point size = targetSize.ToPoint();
-            
-            int targetWidth = (int)targetSize.X;
-            int targetHeight = (int)targetSize.Y;
-
-            float originalAspect = sourceSize.X / sourceSize.Y;
-            float targetAspect = (float)targetWidth / targetHeight;
-
-            //target rect wider than original
-            if (targetAspect > originalAspect)
-            {
-                int finalWidth = (int)(size.Y * originalAspect);
-
-                Point finalLocation = new(
-                    (targetWidth - finalWidth) / 2,
-                    (targetHeight / 2) - (size.Y / 2));
-
-                Point finalSize = new(finalWidth, size.Y);
-
-                return new(finalLocation, finalSize);
-            }
-            //target rect higher than original
-            else
-            {
-                int finalHeight = (int)(size.X / originalAspect);
-
-                Point finalLocation = new(
-                    (targetWidth / 2) - (size.X / 2), 
-                    (targetHeight - finalHeight) / 2);
-
-                Point finalSize = new(size.X, finalHeight);
-
-                return new(finalLocation, finalSize);
-            }
-        }
-        public static Rectangle StretchRectangle(in Vector2 sourceSize, in Rectangle target)
-        {
-            Vector2 targetSize = target.Size.ToVector2();
-
-            Point size = targetSize.ToPoint();
-            Point location = target.Location;
-            
-            return new Rectangle(location, size);
         }
     }
 }
