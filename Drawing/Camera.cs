@@ -16,7 +16,7 @@ namespace PixelBox.Drawing
         public bool IsVisible { get; set; } = true;
 
         //TODO: split RenderOptions between layers of camera instead of cameras 
-        private readonly SortedDictionary<int, HashSet<DrawAction>> renderPipeline = new();
+        private readonly SortedDictionary<int, List<DrawAction>> renderPipeline = new();
 
         public Camera(RenderSource source, Vector2 size) : base(source, size)
         {
@@ -31,10 +31,10 @@ namespace PixelBox.Drawing
             if (drawAction == null)
                 throw new ArgumentException("DrawAction can't be null", nameof(drawAction));
 
-            if (!renderPipeline.ContainsKey(layer))
+            if (!renderPipeline.TryGetValue(layer, out List<DrawAction> list))
                 throw new ArgumentException("Layer doesn't exist");
 
-            renderPipeline[layer].Add(drawAction);
+            list.Add(drawAction);
         }
         public void Unregister(DrawAction drawAction, int layer = DefaultLayer) => renderPipeline[layer].Remove(drawAction);
 

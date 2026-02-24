@@ -165,7 +165,7 @@ namespace PixelBox.Drawing
 
         public Color color = Color.White;
         public float rotationRad = 0;
-
+       
         public DrawOptions()
         {
 
