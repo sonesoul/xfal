@@ -91,22 +91,6 @@ namespace xfal.Drawing
                 0);
         }
 
-        public void Rectangle(Rectangle rect, Color color, int boundThickness)
-        {
-            rect.Size = (rect.Size.ToVector2().Both() + 1).ToPoint();
-            Rectangle[] rects = new Rectangle[4];
-
-            rects[0] = new(rect.Left, rect.Top, rect.Width, boundThickness);
-            rects[1] = new(rect.Left, rect.Top, boundThickness, rect.Height);
-
-            rects[2] = new(rect.Right - boundThickness, rect.Top, boundThickness, rect.Height);
-            rects[3] = new(rect.Left, rect.Bottom - boundThickness, rect.Width, boundThickness);
-
-            foreach (var item in rects)
-            {
-                SpriteBatch.Draw(PixelTexture, item, color);
-            }
-        }
         public void Rectangle(Rectangle rect, Color color)
         {
             rect.Size = (rect.Size.ToVector2().Both() + 1).ToPoint();
