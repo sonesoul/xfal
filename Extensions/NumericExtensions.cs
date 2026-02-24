@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace PixelBox.Extensions
+namespace xfal.Extensions
 {
     public static class NumericExtensions
     {

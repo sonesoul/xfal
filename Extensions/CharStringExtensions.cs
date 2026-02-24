@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 
-namespace PixelBox.Extensions
+namespace xfal.Extensions
 {
     public static class CharStringExtensions
     {

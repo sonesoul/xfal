@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace PixelBox.InputHandling
+namespace xfal.InputHandling
 {
     public class KeyBinding
     {

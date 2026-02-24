@@ -1,11 +1,11 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using PixelBox.Extensions;
+using xfal.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace PixelBox.Drawing
+namespace xfal.Drawing
 {
     public class Drawer
     {
@@ -19,7 +19,7 @@ namespace PixelBox.Drawing
         public ScaleFunction ScaleFunc { get; set; } = null;
         public Color BackgroundColor { get; set; } = Color.Black;
 
-        public Camera MainCamera { get; }
+        public Camera OutputCamera { get; set; }
 
         private GraphicsDevice Graphics => Source.Graphics;
         private SpriteBatch SpriteBatch => Source.SpriteBatch;
@@ -32,7 +32,7 @@ namespace PixelBox.Drawing
         public Drawer(Canvas canvas)
         {
             Canvas = canvas;
-            MainCamera = CreateCamera();
+            OutputCamera = CreateCamera();
         }
         public Drawer(RenderSource source, Vector2 size) : this(new Canvas(source, size)) { }
 
@@ -53,7 +53,7 @@ namespace PixelBox.Drawing
 
         public void RenderAll()
         {
-            MainCamera.Render();
+            OutputCamera.Render();
 
             foreach (var item in renderers.Values)
             {
@@ -67,7 +67,7 @@ namespace PixelBox.Drawing
                 SpriteBatch.Draw(item.RenderTarget, new Rectangle(windowBounds.Location, Canvas.Size.ToPoint()), Color.White);
             }
 
-            DrawItem(MainCamera);
+            DrawItem(OutputCamera);
 
             foreach (var item in renderers.Values)
             {
@@ -122,7 +122,7 @@ namespace PixelBox.Drawing
 
             return (canvasPoint / (Canvas.Size / camera.Size) + camera.Position).Floored();
         }
-        public Vector2 ScreenToWorldPoint(Vector2 point) => ScreenToWorldPoint(point, MainCamera);
+        public Vector2 ScreenToWorldPoint(Vector2 point) => ScreenToWorldPoint(point, OutputCamera);
 
         public static Vector2 NormalizePoint(Vector2 point, Rectangle destination)
         {

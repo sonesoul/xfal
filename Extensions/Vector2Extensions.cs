@@ -2,7 +2,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 
-namespace PixelBox.Extensions
+namespace xfal.Extensions
 {
     public static class Vector2Extensions
     {

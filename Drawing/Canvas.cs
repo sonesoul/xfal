@@ -1,9 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using PixelBox.Extensions;
+using xfal.Extensions;
 using System;
 
-namespace PixelBox.Drawing
+namespace xfal.Drawing
 {
     public class Canvas
     {

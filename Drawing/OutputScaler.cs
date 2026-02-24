@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 
-namespace PixelBox.Drawing
+namespace xfal.Drawing
 {
     public static class OutputScaler
     {

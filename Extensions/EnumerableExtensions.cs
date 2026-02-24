@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace PixelBox.Extensions
+namespace xfal.Extensions
 {
     public static class EnumerableExtensions
     {

@@ -1,8 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using PixelBox.Drawing;
+using xfal.Drawing;
 
-namespace PixelBox.Extensions
+namespace xfal.Extensions
 {
     public static class SpriteBatchExtensions
     {

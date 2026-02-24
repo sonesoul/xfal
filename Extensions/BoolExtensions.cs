@@ -1,4 +1,4 @@
-﻿namespace PixelBox.Extensions
+﻿namespace xfal.Extensions
 {
     public static class BoolExtensions
     {

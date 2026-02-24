@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
-using PixelBox.Extensions;
+using xfal.Extensions;
 
-namespace PixelBox
+namespace xfal
 {
     public static class Time
     {

@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework.Input;
 
-namespace PixelBox.InputHandling
+namespace xfal.InputHandling
 {
     public enum KeyPhase
     {

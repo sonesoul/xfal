@@ -1,4 +1,4 @@
-﻿namespace PixelBox.InputHandling
+﻿namespace xfal.InputHandling
 {
     public readonly struct AxisCulture
     {

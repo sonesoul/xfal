@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace PixelBox.InputHandling
+namespace xfal.InputHandling
 {
     public static class Input
     {
