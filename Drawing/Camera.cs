@@ -15,7 +15,6 @@ namespace xfal.Drawing
         public DrawContext Context { get; private set; }
         public bool IsVisible { get; set; } = true;
 
-        //TODO: split RenderOptions between layers of camera instead of cameras 
         private readonly SortedDictionary<int, List<DrawAction>> renderPipeline = new();
 
         public Camera(RenderSource source, Vector2 size) : base(source, size)
@@ -28,15 +27,20 @@ namespace xfal.Drawing
 
         public void Register(DrawAction drawAction, int layer = DefaultLayer)
         {
-            if (drawAction == null)
-                throw new ArgumentException("DrawAction can't be null", nameof(drawAction));
+            ArgumentNullException.ThrowIfNull(drawAction);
 
-            if (!renderPipeline.TryGetValue(layer, out List<DrawAction> list))
-                throw new ArgumentException("Layer doesn't exist");
+            if (!renderPipeline.TryGetValue(layer, out var list))
+                throw new ArgumentException($"Layer {layer} doesn't exist.", nameof(layer));
 
             list.Add(drawAction);
         }
-        public void Unregister(DrawAction drawAction, int layer = DefaultLayer) => renderPipeline[layer].Remove(drawAction);
+        public void Unregister(DrawAction drawAction, int layer = DefaultLayer)
+        {
+            if (!renderPipeline.TryGetValue(layer, out var list))
+                throw new ArgumentException($"Layer {layer} doesn't exist.", nameof(layer));
+
+            list.Remove(drawAction);
+        }
 
         public void Render()
         {
@@ -44,15 +48,15 @@ namespace xfal.Drawing
 
             foreach (var layer in renderPipeline.Values)
             {
-                foreach (var drawAct in layer)
+                foreach (var draw in layer)
                 {
-                    drawAct(Context);
+                    draw(Context);
                 }
             }
             
             End();
         }
-        
+
         protected override void SetSource(RenderSource source)
         {
             base.SetSource(source);
