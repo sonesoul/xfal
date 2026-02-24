@@ -6,73 +6,16 @@ namespace PixelBox
 {
     public class StepTask
     {
-        public static class Manager
-        {
-            private readonly static List<StepTask> tasks = new();
-            private readonly static Stack<IEnumerator> updateBuffer = new();
-
-            public static void Update()
-            {
-                for (int i = tasks.Count - 1; i >= 0; i--)
-                {
-                    updateBuffer.Clear();
-
-                    StepTask task = tasks[i];
-
-                    try
-                    {
-                        if (!MoveNext(task.Iterator))
-                        {
-                            task.Complete();
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        throw new AggregateException($"({nameof(StepTask)} inner exception) {ex.GetType()}: {ex.Message}");
-                    }
-                }
-            }
-
-            private static bool MoveNext(IEnumerator mainTask)
-            {
-                Stack<IEnumerator> nestedTasks = updateBuffer;
-
-                //finding nested tasks
-                IEnumerator task = mainTask;
-                while (task.Current is IEnumerator subTask)
-                {
-                    task = subTask;
-
-                    if (subTask != null)
-                        nestedTasks.Push(task);
-                }
-
-                //updating nested tasks
-                while (nestedTasks.Count > 0)
-                {
-                    if (nestedTasks.Peek().MoveNext())
-                    {
-                        return true;
-                    }
-                    
-                    nestedTasks.Pop();
-                }
-
-                //all nested tasks are completed
-                return mainTask.MoveNext();
-            }
-
-            public static void Register(StepTask task) => tasks.Add(task);
-            public static void Unregister(StepTask task) => tasks.Remove(task);
-        }
-
-        public static YieldInstruction Yields { get; } = new();
-
         public Func<IEnumerator> IteratorFactory { get; set; }
         public IEnumerator Iterator { get; private set; } = null;
         public bool IsRunning => Iterator != null;
 
         public event Action Completed;
+        
+        public static YieldInstruction Yields { get; } = new();
+
+        private readonly static List<StepTask> tasks = new();
+        private readonly static Stack<IEnumerator> updateBuffer = new();
 
         public StepTask(Func<IEnumerator> factory)
         {
@@ -91,7 +34,7 @@ namespace PixelBox
             if (Iterator == null)
                 return;
 
-            Manager.Register(this);
+            Register(this);
         }
         public void Break()
         {
@@ -99,7 +42,7 @@ namespace PixelBox
                 return;
 
             Iterator = null;
-            Manager.Unregister(this);
+            Unregister(this);
         }
         public void Complete()
         {
@@ -113,5 +56,58 @@ namespace PixelBox
             task.Start();
             return task;
         }
+        
+        public static void Update()
+        {
+            for (int i = tasks.Count - 1; i >= 0; i--)
+            {
+                updateBuffer.Clear();
+
+                StepTask task = tasks[i];
+
+                try
+                {
+                    if (!MoveNext(task.Iterator))
+                    {
+                        task.Complete();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw new AggregateException($"({nameof(StepTask)} inner exception) {ex.GetType()}: {ex.Message}");
+                }
+            }
+        }
+
+        private static bool MoveNext(IEnumerator mainTask)
+        {
+            Stack<IEnumerator> nestedTasks = updateBuffer;
+
+            //finding nested tasks
+            IEnumerator task = mainTask;
+            while (task.Current is IEnumerator subTask)
+            {
+                task = subTask;
+
+                if (subTask != null)
+                    nestedTasks.Push(task);
+            }
+
+            //updating nested tasks
+            while (nestedTasks.Count > 0)
+            {
+                if (nestedTasks.Peek().MoveNext())
+                {
+                    return true;
+                }
+
+                nestedTasks.Pop();
+            }
+
+            //all nested tasks are completed
+            return mainTask.MoveNext();
+        }
+        private static void Register(StepTask task) => tasks.Add(task);
+        private static void Unregister(StepTask task) => tasks.Remove(task);
     }
 }
