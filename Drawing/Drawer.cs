@@ -16,7 +16,7 @@ namespace xfal.Drawing
 
         public Canvas Canvas { get; set; }
 
-        public ScaleFunction ScaleFunc { get; set; } = null;
+        public ScaleFunction ScaleFunc { get; set; } = OutputScaler.Fit;
         public Color BackgroundColor { get; set; } = Color.Black;
 
         public Camera OutputCamera { get; set; }
@@ -33,7 +33,6 @@ namespace xfal.Drawing
         {
             Canvas = canvas;
             OutputCamera = CreateCamera();
-            ScaleFunc = OutputScaler.Fit;
         }
         public Drawer(RenderSource source, Vector2 size) : this(new Canvas(source, size)) { }
 

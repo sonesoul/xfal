@@ -13,7 +13,6 @@ namespace xfal.Drawing
         public const int DefaultLayer = 0;
 
         public DrawContext Context { get; private set; }
-        public bool IsVisible { get; set; } = true;
 
         private readonly SortedDictionary<int, List<DrawAction>> renderPipeline = new();
 
@@ -22,7 +21,7 @@ namespace xfal.Drawing
             AddLayer(DefaultLayer);
         }
 
-        public void AddLayer(int layer) => renderPipeline.Add(layer, new());
+        public void AddLayer(int layer) => renderPipeline[layer] = new();
         public void RemoveLayer(int layer) => renderPipeline.Remove(layer);
 
         public void Register(DrawAction drawAction, int layer = DefaultLayer)
