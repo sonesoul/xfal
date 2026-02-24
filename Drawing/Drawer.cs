@@ -33,6 +33,7 @@ namespace xfal.Drawing
         {
             Canvas = canvas;
             OutputCamera = CreateCamera();
+            ScaleFunc = OutputScaler.Fit;
         }
         public Drawer(RenderSource source, Vector2 size) : this(new Canvas(source, size)) { }
 
