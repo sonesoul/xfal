@@ -20,7 +20,6 @@ namespace xfal.InputHandling
         private readonly static Key[] _allKeys = Enum.GetValues<Key>();
         private readonly static int _keyCount = _allKeys.Length;
         
-        private readonly static bool[] _current = new bool[_keyCount];
         private readonly static bool[] _previous = new bool[_keyCount];
 
         private static MouseState _mouseState;
@@ -35,25 +34,23 @@ namespace xfal.InputHandling
 
             MousePosition = mouseState.Position.ToVector2();
 
-            for (int i = 0; i < _allKeys.Length; i++)
-            {
-                _previous[i] = _current[i];
-                _current[i] = IsKeyDown(_allKeys[i]);
-            }
-
             for (int i = 0; i < _keyCount; i++)
             {
-                //up -> down
-                if (!_previous[i] && _current[i])
+                Key k = _allKeys[i];  
+                
+                bool isDown = IsKeyDown(k);
+                bool wasDown = _previous[i];
+
+                if (!wasDown && isDown)
                 {
-                    KeyPressed?.Invoke(_allKeys[i]);
+                    KeyPressed?.Invoke(k);
+                }
+                if (wasDown && !isDown)
+                {
+                    KeyReleased?.Invoke(k);
                 }
 
-                //down -> up
-                if (_previous[i] && !_current[i])
-                {
-                    KeyReleased?.Invoke(_allKeys[i]);
-                }
+                _previous[i] = isDown;
             }
 
             foreach (var item in _binds)
