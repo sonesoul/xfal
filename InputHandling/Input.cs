@@ -23,12 +23,12 @@ namespace xfal.InputHandling
 
         private const int MouseStartIndex = 1000;
 
-        public static void Update(in KeyboardState keyboardState, in MouseState mouseState)
+        public static void Update()
         {
-            _keyState = keyboardState;
-            _mouseState = mouseState;
+            _keyState = Keyboard.GetState();
+            _mouseState = Mouse.GetState();
 
-            MousePosition = mouseState.Position.ToVector2();
+            MousePosition = _mouseState.Position.ToVector2();
 
             for (int i = 0; i < _keyCount; i++)
             {
