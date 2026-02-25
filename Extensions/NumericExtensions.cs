@@ -37,30 +37,5 @@ namespace xfal.Extensions
         public static float Floored(this float value) => (float)Math.Floor(value);
         public static float Ceiled(this float value) => (float)Math.Ceiling(value);
         public static float Rounded(this float value, int digits = 0) => (float)Math.Round(value, digits);
-
-        public static string ToSizeString(this long sizeInBytes)
-        {
-            long sizeBytes = sizeInBytes;
-            double sizeKb = sizeBytes / 1024.0;
-            double sizeMb = sizeKb / 1024.0;
-            double sizeGb = sizeMb / 1024.0;
-
-            string finalSize = $"{sizeBytes} B";
-
-            if (sizeGb >= 1)
-            {
-                finalSize = $"{sizeGb:F2} GB";
-            }
-            else if (sizeMb >= 1)
-            {
-                finalSize = $"{sizeMb:F2} MB";
-            }
-            else if (sizeKb >= 1)
-            {
-                finalSize = $"{sizeKb:F2} KB";
-            }
-            
-            return finalSize;
-        }
     }
 }
