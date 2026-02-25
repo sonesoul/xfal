@@ -35,6 +35,10 @@ namespace xfal.Drawing
             OutputCamera = CreateCamera();
         }
         public Drawer(RenderSource source, Point size) : this(new Canvas(source, size)) { }
+        public Drawer(SpriteBatch spriteBatch, GraphicsDeviceManager graphicsManager, Point size) : this(
+            new Canvas(
+                new RenderSource(spriteBatch, graphicsManager), 
+                size)) { }
 
         public void AddCamera(Camera item, int order) => renderers.Add(order, item);
         public void AddCamera(Camera item)
