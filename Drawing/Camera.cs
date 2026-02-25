@@ -16,7 +16,7 @@ namespace xfal.Drawing
 
         private readonly SortedDictionary<int, List<DrawAction>> renderPipeline = new();
 
-        public Camera(RenderSource source, Vector2 size) : base(source, size)
+        public Camera(RenderSource source, Point size) : base(source, size)
         {
             AddLayer(DefaultLayer);
         }

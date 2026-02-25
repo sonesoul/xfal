@@ -14,7 +14,7 @@ namespace xfal.Drawing
 
         public RenderTarget2D RenderTarget { get; private set; }
         public RenderSource Source { get => _source; set => SetSource(value); }
-        public Vector2 Size { get => _size; set => SetSize(value); } 
+        public Point Size { get => _size; set => SetSize(value); } 
 
         protected RenderSource _source;
 
@@ -22,9 +22,9 @@ namespace xfal.Drawing
         protected RenderOptions _options = new();
         protected Color _backgroundColor = Color.Black;
 
-        protected Vector2 _size;
+        protected Point _size;
 
-        public Canvas(RenderSource source, Vector2 size)
+        public Canvas(RenderSource source, Point size)
         {
             Source = source;
             SetSize(size);
@@ -47,9 +47,9 @@ namespace xfal.Drawing
 
         public virtual Matrix GetViewMatrix() => Matrix.CreateTranslation(new(-Position, 0));
         
-        protected virtual void SetSize(Vector2 newSize)
+        protected virtual void SetSize(Point newSize)
         {
-            RenderTarget = new(Source.Graphics, (int)newSize.X, (int)newSize.Y);
+            RenderTarget = new(Source.Graphics, newSize.X, newSize.Y);
             _size = newSize;
         }
         protected virtual void SetSource(RenderSource source)

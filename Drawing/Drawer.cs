@@ -9,7 +9,7 @@ namespace xfal.Drawing
 {
     public class Drawer
     {
-        public delegate Rectangle ScaleFunction(in Vector2 source, in Rectangle target);
+        public delegate Rectangle ScaleFunction(in Point source, in Rectangle target);
 
         public RenderSource Source => Canvas.Source;
         public RenderOptions Options { get; set; } = new();
@@ -34,7 +34,7 @@ namespace xfal.Drawing
             Canvas = canvas;
             OutputCamera = CreateCamera();
         }
-        public Drawer(RenderSource source, Vector2 size) : this(new Canvas(source, size)) { }
+        public Drawer(RenderSource source, Point size) : this(new Canvas(source, size)) { }
 
         public void AddCamera(Camera item, int order) => renderers.Add(order, item);
         public void AddCamera(Camera item)
@@ -64,7 +64,7 @@ namespace xfal.Drawing
 
             void DrawItem(Camera item)
             {
-                SpriteBatch.Draw(item.RenderTarget, new Rectangle(windowBounds.Location, Canvas.Size.ToPoint()), Color.White);
+                SpriteBatch.Draw(item.RenderTarget, new Rectangle(windowBounds.Location, Canvas.Size), Color.White);
             }
 
             DrawItem(OutputCamera);
@@ -112,7 +112,7 @@ namespace xfal.Drawing
         public Vector2 ScreenToCanvasPoint(Vector2 point)
         {
             Vector2 normalizedPoint = NormalizePoint(point, destination);
-            Vector2 canvasPoint = normalizedPoint * Canvas.Size;
+            Vector2 canvasPoint = normalizedPoint * Canvas.Size.ToVector2();
 
             return canvasPoint.Floored();
         }
@@ -120,7 +120,7 @@ namespace xfal.Drawing
         {
             Vector2 canvasPoint = ScreenToCanvasPoint(point);
 
-            return (canvasPoint / (Canvas.Size / camera.Size) + camera.Position).Floored();
+            return (canvasPoint / (Canvas.Size.ToVector2() / camera.Size.ToVector2()) + camera.Position).Floored();
         }
         public Vector2 ScreenToWorldPoint(Vector2 point) => ScreenToWorldPoint(point, OutputCamera);
 

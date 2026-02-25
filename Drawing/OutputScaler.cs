@@ -4,14 +4,14 @@ namespace xfal.Drawing
 {
     public static class OutputScaler
     {
-        public static Rectangle Fit(in Vector2 source, in Rectangle target)
+        public static Rectangle Fit(in Point source, in Rectangle target)
         {
             Point size = target.Size;
 
             int targetWidth = size.X;
             int targetHeight = size.Y;
 
-            float originalAspect = source.X / source.Y;
+            float originalAspect = (float)source.X / source.Y;
             float targetAspect = (float)targetWidth / targetHeight;
 
             //target rect wider than original
@@ -41,7 +41,7 @@ namespace xfal.Drawing
                 return new(finalLocation, finalSize);
             }
         }
-        public static Rectangle Stretch(in Vector2 source, in Rectangle target)
+        public static Rectangle Stretch(in Point _, in Rectangle target)
         {
             return target;
         }
