@@ -10,8 +10,6 @@ namespace xfal.InputHandling
     {
         public static event Action<Key> KeyPressed, KeyHeld, KeyReleased;
 
-        public static AxisCulture AxisCulture { get; set; } = AxisCulture.WASD;
-        public static Vector2 Axis => _axis;
         public static Vector2 MousePosition { get; private set; }
 
         public static Key[] PressedKeys => pressedKeys.ToArray();
@@ -32,7 +30,6 @@ namespace xfal.InputHandling
         };
         private readonly static HashSet<Key> pressedKeys = new(Enum.GetValues(typeof(Key)).Length + mouseKeys.Length);
 
-        private static Vector2 _axis = Vector2.Zero;
         private static MouseState _mouseState;
         private static KeyboardState _keyState;
 
@@ -73,8 +70,6 @@ namespace xfal.InputHandling
                 Key key = toRemove.Dequeue();
                 wasPressed.Remove(key);
             }
-
-            UpdateAxis();
 
             foreach (var item in binds)
             {
@@ -157,13 +152,5 @@ namespace xfal.InputHandling
             Key.MouseX2 => MouseState.XButton2 == ButtonState.Pressed,
             _ => throw new InvalidOperationException($"\"{key}\" is not a mouse key or it doesn't exist in the {nameof(Key)} enumeration."),
         };
-
-        private static void UpdateAxis()
-        {
-            AxisCulture.Deconstruct(out var up, out var down, out var left, out var right);
-
-            _axis.X = (IsKeyDown(right) ? 1 : 0) - (IsKeyDown(left) ? 1 : 0);
-            _axis.Y = (IsKeyDown(down) ? 1 : 0) - (IsKeyDown(up) ? 1 : 0);
-        }
     }
 }
