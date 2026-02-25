@@ -8,27 +8,20 @@ namespace xfal.InputHandling
 {
     public static class Input
     {
-        public static event Action<Key> KeyPressed, KeyHeld, KeyReleased;
+        public static event Action<Key> KeyPressed, KeyReleased;
 
         public static Vector2 MousePosition { get; private set; }
-
-        public static Key[] PressedKeys => pressedKeys.ToArray();
 
         public static ref KeyboardState KeyState => ref _keyState;
         public static ref MouseState MouseState => ref _mouseState;
 
-        private readonly static List<KeyBinding> binds = new();
-        private readonly static HashSet<Key> wasPressed = new();
-        private readonly static Queue<Key> toRemove = new();
-        private readonly static Key[] mouseKeys =
-        {
-            Key.MouseLeft,
-            Key.MouseRight,
-            Key.MouseMiddle,
-            Key.MouseX1,
-            Key.MouseX2
-        };
-        private readonly static HashSet<Key> pressedKeys = new(Enum.GetValues(typeof(Key)).Length + mouseKeys.Length);
+        private readonly static List<KeyBinding> _binds = new();
+
+        private readonly static Key[] _allKeys = Enum.GetValues<Key>();
+        private readonly static int _keyCount = _allKeys.Length;
+        
+        private readonly static bool[] _current = new bool[_keyCount];
+        private readonly static bool[] _previous = new bool[_keyCount];
 
         private static MouseState _mouseState;
         private static KeyboardState _keyState;
@@ -42,61 +35,35 @@ namespace xfal.InputHandling
 
             MousePosition = mouseState.Position.ToVector2();
 
-            UpdatePressedKeys();
-
-            foreach (var key in pressedKeys)
+            for (int i = 0; i < _allKeys.Length; i++)
             {
-                if (wasPressed.Add(key))
-                {
-                    KeyPressed?.Invoke(key);
-                }
-                else
-                {
-                    KeyHeld?.Invoke(key);
-                }
+                _previous[i] = _current[i];
+                _current[i] = IsKeyDown(_allKeys[i]);
             }
 
-            foreach (var key in wasPressed)
+            for (int i = 0; i < _keyCount; i++)
             {
-                if (!pressedKeys.Contains(key))
+                //up -> down
+                if (!_previous[i] && _current[i])
                 {
-                    toRemove.Enqueue(key);
-                    KeyReleased?.Invoke(key);
+                    KeyPressed?.Invoke(_allKeys[i]);
+                }
+
+                //down -> up
+                if (_previous[i] && !_current[i])
+                {
+                    KeyReleased?.Invoke(_allKeys[i]);
                 }
             }
 
-            while (toRemove.Count > 0)
-            {
-                Key key = toRemove.Dequeue();
-                wasPressed.Remove(key);
-            }
-
-            foreach (var item in binds)
+            foreach (var item in _binds)
             {
                 item?.Update();
             }
         }
 
-        private static void UpdatePressedKeys()
-        {
-            pressedKeys.Clear();
-
-            foreach (var key in KeyState.GetPressedKeys())
-            {
-                pressedKeys.Add((Key)key);
-            }
-
-            foreach (var k in mouseKeys)
-            {
-                if (IsKeyDown(k))
-                {
-                    pressedKeys.Add(k);
-                }
-            }
-        }
-
-        public static void AddBind(KeyBinding binding) => binds.Add(binding);
-        public static void RemoveBind(KeyBinding binding) => binds.Remove(binding);
+        public static void AddBind(KeyBinding binding) => _binds.Add(binding);
+        public static void RemoveBind(KeyBinding binding) => _binds.Remove(binding);
 
         public static KeyBinding Bind(Key key, KeyPhase phase, Action action)
         {

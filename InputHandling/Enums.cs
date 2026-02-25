@@ -5,7 +5,6 @@ namespace xfal.InputHandling
     public enum KeyPhase
     {
         Press,
-        Hold,
         Release
     }
 

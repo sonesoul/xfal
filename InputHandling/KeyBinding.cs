@@ -28,11 +28,6 @@ namespace xfal.InputHandling
                 if (!wasDown && isDown)
                     Action?.Invoke();
             }
-            else if (TriggerPhase == KeyPhase.Hold) 
-            {
-                if (wasDown && isDown)
-                    Action?.Invoke();
-            }
             else if (TriggerPhase == KeyPhase.Release)
             {
                 if (wasDown && !isDown)
