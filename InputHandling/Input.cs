@@ -1,8 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace xfal.InputHandling
 {
@@ -14,8 +12,6 @@ namespace xfal.InputHandling
 
         public static ref KeyboardState KeyState => ref _keyState;
         public static ref MouseState MouseState => ref _mouseState;
-
-        private readonly static List<KeyBinding> _binds = new();
 
         private readonly static Key[] _allKeys = Enum.GetValues<Key>();
         private readonly static int _keyCount = _allKeys.Length;
@@ -52,48 +48,6 @@ namespace xfal.InputHandling
 
                 _previous[i] = isDown;
             }
-
-            foreach (var item in _binds)
-            {
-                item?.Update();
-            }
-        }
-
-        public static void AddBind(KeyBinding binding) => _binds.Add(binding);
-        public static void RemoveBind(KeyBinding binding) => _binds.Remove(binding);
-
-        public static KeyBinding Bind(Key key, KeyPhase phase, Action action)
-        {
-            KeyBinding binding = new(key, phase, action);
-
-            AddBind(binding);
-            return binding;
-        }
-        public static void BindSingle(Key key, KeyPhase phase, Action action)
-        {
-            KeyBinding binding = null;
-            
-            void AutoUnbind()
-            {
-                action?.Invoke();
-                RemoveBind(binding);
-            }
-
-            binding = new(key, phase, AutoUnbind);
-            AddBind(binding);
-        }
-        public static void BindSingle(KeyBinding binding)
-        {
-            Action action = binding.Action;
-
-            void AutoUnbind()
-            {
-                action?.Invoke();
-                RemoveBind(binding);
-            }
-
-            binding.Action = AutoUnbind;
-            AddBind(binding);
         }
 
         public static bool IsKeyDown(Key key)

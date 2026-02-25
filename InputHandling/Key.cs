@@ -2,12 +2,6 @@
 
 namespace xfal.InputHandling
 {
-    public enum KeyPhase
-    {
-        Press,
-        Release
-    }
-
     public enum Key
     {
         None = Keys.None,
