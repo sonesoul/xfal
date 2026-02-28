@@ -49,6 +49,13 @@ namespace xfal.Drawing
         
         protected virtual void SetSize(Point newSize)
         {
+            if (_size == newSize)
+                return;
+
+            if (newSize.X <= 0 || newSize.Y <= 0)
+                return;
+
+            RenderTarget?.Dispose();
             RenderTarget = new(Source.Graphics, newSize.X, newSize.Y);
             _size = newSize;
         }
