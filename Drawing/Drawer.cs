@@ -16,6 +16,8 @@ namespace xfal.Drawing
 
         public Canvas Canvas { get; set; }
 
+        public static RectScaler OutputScaler { get; } = new();
+
         public ScaleFunction ScaleFunc { get; set; } = OutputScaler.Fit;
         public Color BackgroundColor { get; set; } = Color.Black;
 

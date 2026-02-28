@@ -2,9 +2,9 @@
 
 namespace xfal.Drawing
 {
-    public static class OutputScaler
+    public class RectScaler
     {
-        public static Rectangle Fit(in Point source, in Rectangle target)
+        public Rectangle Fit(in Point source, in Rectangle target)
         {
             Point size = target.Size;
 
@@ -41,7 +41,7 @@ namespace xfal.Drawing
                 return new(finalLocation, finalSize);
             }
         }
-        public static Rectangle Stretch(in Point _, in Rectangle target)
+        public Rectangle Stretch(in Point _, in Rectangle target)
         {
             return target;
         }
