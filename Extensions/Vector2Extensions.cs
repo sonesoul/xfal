@@ -107,7 +107,6 @@ namespace xfal.Extensions
         public static float AbsX(this Vector2 v) => Math.Abs(v.X);
         public static float AbsY(this Vector2 v) => Math.Abs(v.Y);
 
-        public static Vector2 Where(this Vector2 v, Func<float, float, Vector2> func) => func(v.X, v.Y);
         public static Vector2 WhereX(this Vector2 v, Func<float, float> func) => v.WhereX(func(v.X));
         public static Vector2 WhereY(this Vector2 v, Func<float, float> func) => v.WhereY(func(v.Y));
 
