@@ -1,0 +1,219 @@
+# xfal
+XNA Framework Abstraction Library (xfal) adds object oriented implementation of basic rendering system, input handling, time management, and even coroutines to simplify 
+creation of graphical applications and games when using XNA-compatible frameworks since it is based on Microsoft.Xna.Framework namespace.
+
+## Installation
+1. Download the latest release from https://github.com/sonesoul/xfal/releases  
+2. Add xfal.dll to your XNA or MonoGame project as a Project Reference (make sure your project is in .NET 6.0 or higher)
+3. Add usings
+```csharp
+using xfal;                 // StepTask, Time, Asset ...
+using xfal.Drawing;         // Drawer, Camera, DrawContext ...
+using xfal.InputHandling;   // Input, Key
+using xfal.Extensions;      // Vector2Extensions, NumericExtensions ...
+```
+4. You're done!
+
+> [!TIP]
+> Copy the file to your project so it will be self-contained 
+
+## How To Use?
+Depending on your needs you can use specified modules of xfal. Basic modules are: 
+
+[Rendering](#rendering)  
+[StepTask (coroutine)](#steptask)  
+[Time](#time)  
+[Input](#input)  
+
+Mostly they are all separate. If you don't need a module - just ignore it unless otherwise expected.
+
+# Rendering
+To draw something, create a proper function.
+```csharp
+void Draw(DrawContext draw)
+{
+  // draw a rectangle on 0,0 position with width and height 10
+  draw.Rectangle(new Rectangle(0, 0, 10, 10), Color.White);
+} 
+```
+> [!NOTE]
+> `DrawContext` has different kinds of methods for drawing. You can still use `SpriteBatch.Draw(...)`, but **DO NOT** use `SpriteBatch.Begin(...)` or `SpriteBatch.End(...)`.
+
+For `draw.Texture(...)` and some others there is the `DrawOptions` structure in arguments. It is used to combine several parameters in one object, so consider it as just a simpler way to give arguments: 
+
+```csharp
+DrawOptions opts = new DrawOptions() { 
+  position = new Vector2(x, y),
+  origin = new Vector2(x, y),
+  scale = new Vector2(width, height),
+  color = Color.White,
+  rotationRad = Deg2Rad(45) 
+};
+
+//you can store it as long as you need and change at any time
+opts.position = Vector2.Zero;
+
+drawer.DrawTexture(texture, opts);
+```
+
+Then, you'll have to register the method:
+```csharp
+//registering for rendering
+drawer.OutputCamera.Register(Draw);
+```
+You can also use more than one camera:
+```csharp
+drawer.AddCamera(new Camera(renderSource, new Point(1920, 1080, order: 1)));
+drawer.GetCamera(1).Register(Draw);
+```
+> [!NOTE]
+> Each camera handles only its own registered draws.
+
+When needed, call `drawer.Draw()` or you can split the rendering if you have specific needs.
+```csharp
+drawer.RenderAll();   // renders everything on the single frame
+drawer.Clear();       // clears the screen
+drawer.DrawCanvas();  // draws the frame to the screen 
+```
+
+# StepTask 
+StepTask is a kind of coroutine. It helps with organizing independent running methods: interpolations, delays, etc. 
+```csharp
+IEnumerator MyCoroutine() 
+{ 
+    yield return StepTask.Yields.WaitForSeconds(3);
+}
+
+StepTask task = StepTask.Run(MyCoroutine(3)); 
+```
+`StepTask.Yields` has some methods to manage your waiting time in the coroutine.
+> [!IMPORTANT]
+> `StepTask.Yields.WaitForSeconds(...)` and `StepTask.WaitForRealSeconds(...)` depend on `xfal.Time.Delta` and `xfal.Time.RealDelta`, so if you're using them, `xfal.Time` should be updated before
+
+It is easily extendable by making an extension class and overriding YieldInstruction.
+```csharp
+//classical extensions class
+static class YieldInstructionExtensions 
+{ 
+    IEnumerator MyExtension(this YieldInstruction _) { yield return null; }
+}
+
+//then you can call it
+yield return StepTask.Yields.MyExtension();
+```
+To make all your coroutines work, call `StepTask.Update()` in a main loop. Each update makes only **one call** in all coroutines straight to the next `yield return`.
+
+# Time
+For managing time, there is `xfal.Time` or just `Time` class. It's static. Call `Time.Update(...)` before any time-dependant updates. 
+```csharp
+var delta = Time.Delta;       // depends on Time.TimeScale
+var rdelta = Time.RealDelta;  // doesn't depend on Time.TimeScale
+var fdelta = Time.FixedDelta; // always the same. Equals 1/60 by default
+
+Time.TimeScale = 0.5f;       // time (Time.Delta) is 2 times slower
+Time.FixedDelta = 1.0f / 30; // making bigger steps, can cause less accuracy in some physics engines 
+```
+
+# Input
+xfal has `Input` class which combines mouse handling and keyboard handling. It uses `xfal.Key` enum, which also includes both keyboard and mouse buttons. Needs to be updated through `Input.Update()` to work properly.
+```csharp
+if (Input.IsKeyDown(Key.MouseLeft))
+  DoSomething(); 
+
+//or you can use events
+void HandleKey(Key k)
+{
+  if (k == MouseLeft)
+    DoSomething();
+}
+
+Input.KeyPressed += HandleKey;
+Input.KeyReleased += HandleKey;
+``` 
+> [!NOTE]
+> There is `Input.MousePosition` property. It returns position on the screen. Since cameras have different resolution, you'll have to use `drawer.ScreenToWorldPoint(screenPos, camera)` to get position based on the viewport of the camera.
+
+# Tips
+Rendering module makes resolution of the application static. If you want to use this ✨ _fancy_ ✨ rendering system but don't want to deal with static resolution, there is an easy fix: 
+```csharp
+Window.ClientSizeChanged += (obj, args) =>
+{
+    drawer.Canvas.Size = Window.ClientBounds.Size;
+    drawer.OutputCamera.Size = Window.ClientBounds.Size;
+};
+```
+> [!NOTE]
+> If you have lots of cameras, you'll have to update them all.
+---
+
+Each `Camera` has its own properties for drawing. You can make its background transparent which can be really useful when you have a camera used only for UI rendering.
+```csharp
+drawer.GetCamera(UI_CAMERA_ORDER).BackgroundColor = Color.Transparent; 
+```
+---
+
+When `Graphics.Viewport` changes, `Drawer` automatically adjusts output (in `DrawCanvas(...)` method) using specific scaling function - and you can make and use your own one!
+This could be done the same way as mentioned in `YieldInstruction overriding`. 
+```csharp
+static class RectScalerExtensions
+{
+  public Rectangle MyScale(this RectScaler _, in Point source, in Rectangle target)
+  {
+    //do some calculations in there
+  }
+}
+
+//set it
+drawer.ScaleFunc = Drawer.OutputScaler.MyScale;
+```
+---
+xfal has LOTS of extensions. The most detailed ones are extensions for Vector2. 
+```csharp
+//they are all returning values and DO NOT change the value
+
+v.Floored();               // Math.Floor(...) on both
+v.Ceiled();                // Math.Ceiling(...) on both
+v.SignFloored();           // Math.Floor() without sign condition on both
+v.SignCeiled();            // Math.Ceiling() without sign condition on both
+
+v.Abs();                   // Math.Abs(...) on both
+v.AbsX();                  // Math.Abs(...) on X
+v.AbsY();                  // Math.Abs(...) on Y
+v.IntCast();               // (int) on both
+v.Rounded(digits: 0);      // Math.Round(...) on both
+
+v.TakeX();                 // set v.Y to 0 
+v.TakeY();                 // set v.X to 0
+
+v.WhereX(123);             // set X to 123
+v.WhereY(123);             // set Y ti 123
+v.WhereX(x => x + 123);    // add 123 to X
+v.WhereY(y => y + 123);    // add 123 to Y
+
+v.MinSquare();             // set both on minimal value between X and Y
+v.MaxSquare();             // set both on maximum value between X and Y
+
+v.Min();                   // minimum value between X and Y
+v.Max();                   // maximum value between X and Y
+
+v.MaxAxis();               // make the smaller axis 0 (nothing changes if they are the same)
+v.MinAxis();               // make the greater axis 0 (nothing changes if they are the same)
+
+v.Normal();                // set X to -Y and Y to X
+v.Perpendicular();         // set X to Y and Y to -X
+
+v.UnitNormal();            // v.Normal() in range of 1
+v.Normalized();            // vector in range of 1
+
+v.Dot(v2)                  // dot product on both
+v.Cross(v2);               // X1 * Y2 - Y1 * X2
+v.DistanceTo(v2);          // distance between vectors
+v.RotatedAround(v2, r);    // rotated around v2 by r radians
+
+// supported operators: >, >=, <, <=, ==, !=
+
+bool anyAxisLess = vec.Any() > 123;
+
+// also supports +, -, *, /
+bool bothAxesEqual = v.Both() == 123; 
+```
