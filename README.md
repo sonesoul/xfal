@@ -14,8 +14,8 @@ using xfal.Extensions;      // Vector2Extensions, NumericExtensions ...
 ```
 4. You're done!
 
-[!TIP]
-Copy xfal.dll into your project directory and commit it to source control.
+> [!TIP]
+> Copy xfal.dll into your project directory and commit it to source control.
 This ensures the exact library version is tracked with the project and prevents dependency issues across machines.
 
 ## How To Use?
