@@ -14,8 +14,9 @@ using xfal.Extensions;      // Vector2Extensions, NumericExtensions ...
 ```
 4. You're done!
 
-> [!TIP]
-> Copy the file to your project so it will be self-contained 
+[!TIP]
+Copy xfal.dll into your project directory and commit it to source control.
+This ensures the exact library version is tracked with the project and prevents dependency issues across machines.
 
 ## How To Use?
 Depending on your needs you can use specified modules of xfal. Basic modules are: 
