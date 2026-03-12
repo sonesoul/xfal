@@ -70,11 +70,13 @@ drawer.GetCamera(1).Register(Draw);
 > [!NOTE]
 > Each camera handles only its own registered draws.
 
-When needed, call `drawer.Draw()` or you can split the rendering if you have specific needs.
+Call `drawer.Draw()` in your draw-cycle. You can also split the rendering if you have specific needs.
 ```csharp
 drawer.RenderAll();   // renders everything on the single frame
 drawer.Clear();       // clears the screen
-drawer.DrawCanvas();  // draws the frame to the screen 
+drawer.DrawCanvas();  // draws the frame to the screen
+
+drawer.Draw();        // does all three in the exact same order
 ```
 
 # StepTask 
@@ -103,6 +105,13 @@ static class YieldInstructionExtensions
 yield return StepTask.Yields.MyExtension();
 ```
 To make all your coroutines work, call `StepTask.Update()` in a main loop. Each update makes only **one call** in all coroutines straight to the next `yield return`.
+By calling `StepTask.Run(...)` the coroutine starts automatically, but you have full control of how and when your coroutines run and stop. 
+```csharp
+task.Start();    // starts the coroutine from the beginning
+task.Break();    // finishes coroutine, no event invocation
+task.Complete(); // finishes coroutine and invokes Completed event
+```
+By creating it from the constructor, you'll have to call `Start()` yourself.
 
 # Time
 For managing time, there is `xfal.Time` or just `Time` class. It's static. Call `Time.Update(...)` before any time-dependant updates. 
@@ -144,7 +153,7 @@ Window.ClientSizeChanged += (obj, args) =>
 };
 ```
 > [!NOTE]
-> If you have lots of cameras, you'll have to update them all.
+> If you have multiple cameras, you'll have to update them all.
 ---
 
 Each `Camera` has its own properties for drawing. You can make its background transparent which can be really useful when you have a camera used only for UI rendering.
@@ -170,12 +179,12 @@ drawer.ScaleFunc = Drawer.OutputScaler.MyScale;
 ---
 xfal has LOTS of extensions. The most detailed ones are extensions for Vector2. 
 ```csharp
-//they are all returning values and DO NOT change the value
+//they are all returning values and DO NOT change the vector
 
 v.Floored();               // Math.Floor(...) on both
 v.Ceiled();                // Math.Ceiling(...) on both
-v.SignFloored();           // Math.Floor() without sign condition on both
-v.SignCeiled();            // Math.Ceiling() without sign condition on both
+v.SignFloored();           // Math.Floor(...) without sign condition on both
+v.SignCeiled();            // Math.Ceiling(...) without sign condition on both
 
 v.Abs();                   // Math.Abs(...) on both
 v.AbsX();                  // Math.Abs(...) on X
@@ -197,8 +206,8 @@ v.MaxSquare();             // set both on maximum value between X and Y
 v.Min();                   // minimum value between X and Y
 v.Max();                   // maximum value between X and Y
 
-v.MaxAxis();               // make the smaller axis 0 (nothing changes if they are the same)
-v.MinAxis();               // make the greater axis 0 (nothing changes if they are the same)
+v.MaxAxis();               // set the smaller axis 0 (nothing changes if they are the same)
+v.MinAxis();               // set the greater axis 0 (nothing changes if they are the same)
 
 v.Normal();                // set X to -Y and Y to X
 v.Perpendicular();         // set X to Y and Y to -X
@@ -213,8 +222,8 @@ v.RotatedAround(v2, r);    // rotated around v2 by r radians
 
 // supported operators: >, >=, <, <=, ==, !=
 
-bool anyAxisLess = vec.Any() > 123;
+bool anyAxisLess = vec.Any() > 123; //X || Y > 123 
 
 // also supports +, -, *, /
-bool bothAxesEqual = v.Both() == 123; 
+bool bothAxesEqual = v.Both() == 123; // X && Y == 123
 ```
