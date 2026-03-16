@@ -222,7 +222,7 @@ v.RotatedAround(v2, r);    // rotated around v2 by r radians
 
 // supported operators: >, >=, <, <=, ==, !=
 
-bool anyAxisLess = vec.Any() > 123; //X || Y > 123 
+bool anyAxisLess = vec.Any() < 123; //X || Y < 123 
 
 // also supports +, -, *, /
 bool bothAxesEqual = v.Both() == 123; // X && Y == 123
